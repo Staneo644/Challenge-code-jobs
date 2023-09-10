@@ -10,28 +10,20 @@ import { JobService } from 'src/core/jobs/job.interfaces';
 export class JobsService implements JobService {
   constructor(@InjectModel('Job') private readonly jobModel: Model<Job>) {}
 
-  async createJob(employerId: string, jobData: any): Promise<Job> {
+  async createJob( jobData: any): Promise<Job> {
     // Créez une nouvelle instance de Job avec les données fournies
-    const job = new this.jobModel({
-      ...jobData,
-      employer_id: employerId, // Assurez-vous que l'ID de l'employeur est lié à l'emploi
-    });
+    const job = new this.jobModel(jobData);
     return await job.save();
   }
 
   async updateJob(employerId: string, jobId: string, jobData: JobsModule): Promise<Job> {
-    // Recherchez l'emploi dans la base de données
     const job = await this.findJobById(jobId);
 
-    // Assurez-vous que l'employeur correspond à celui spécifié dans les données
     if (job.employer_id.toString() !== employerId) {
       throw new NotFoundException('Job not found for the specified employer.');
     }
 
-    // Mettez à jour les propriétés de l'emploi avec les nouvelles données
     Object.assign(job, jobData);
-
-    // Enregistrez les modifications
     return await job.save();
   }
 
@@ -61,5 +53,4 @@ export class JobsService implements JobService {
     return await this.jobModel.find({ employer_id: employerId }).exec();
   }
 
-  // Vous pouvez ajouter d'autres méthodes de recherche et de filtrage des emplois en fonction de vos besoins.
 }

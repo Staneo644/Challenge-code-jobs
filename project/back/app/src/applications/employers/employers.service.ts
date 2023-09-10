@@ -4,51 +4,43 @@ import { Employer } from '../../core/employers/employer.entity';
 import { InjectModel } from '@nestjs/mongoose';
 import { JobsService } from '../jobs/jobs.service';
 import { EmployerService } from '../../core/employers/employer.interfaces';
+import { EmployerModel } from '../../core/employers/employer.entity';
+import { NotFoundException } from '@nestjs/common';
 
 @Injectable()
 export class EmployersService implements EmployerService {
     constructor(private readonly jobsService: JobsService) {}
   
-    async createJob(employerId: string, jobData: any) {
-      const job = await this.jobsService.createJob(employerId, jobData);
-      // Enregistrez l'emploi pour l'employeur
-      // Vous pouvez implémenter cette logique ici
-      return job;
-    }
-  
-    async updateJob(employerId: string, jobId: string, jobData: any) {
-      // Validez et mettez à jour l'emploi
-      const job = await this.jobsService.updateJob(employerId, jobId, jobData);
-      // Votre logique de mise à jour ici
-      return job;
-    }
-  
-    async deleteJob(employerId: string, jobId: string) {
-      // Supprimez l'emploi
-      await this.jobsService.deleteJob(employerId, jobId);
-      // Votre logique de suppression ici
-    }
-
-    async getEmployerJobs(employerId: string) {
-      // Récupérez les emplois de l'employeur
-      const jobs = await this.jobsService.getEmployerJobs(employerId);
-      // Votre logique de récupération ici
-      return jobs;
-    }
+    
 
     async createEmployer(employerData: Partial<Employer>): Promise<Employer> {
-      throw new Error('Method not implemented.');
+      const createdEmployer = new EmployerModel(employerData);
+      return createdEmployer.save();
     }
-
-    async updateEmployer(employerId: string, employerData: Partial<Employer>): Promise<Employer> {
-      throw new Error('Method not implemented.');
+  
+    async updateEmployer(email: string, employerData: Partial<Employer>): Promise<Employer> {
+      const updatedEmployer = await EmployerModel.findOneAndUpdate(
+        { email },
+        employerData,
+        { new: true },
+      );
+  
+      if (!updatedEmployer) {
+        throw new NotFoundException(`Employer with email ${email} not found`);
+      }
+  
+      return updatedEmployer;
     }
-
+  
     async deleteEmployer(email: string): Promise<void> {
-      throw new Error('Method not implemented.');
+      const deletedEmployer = await EmployerModel.findOneAndDelete({ email });
+  
+      if (!deletedEmployer) {
+        throw new NotFoundException(`Employer with email ${email} not found`);
+      }
     }
-
+  
     async getEmployer(email: string): Promise<Employer | null> {
-      throw new Error('Method not implemented.');
+      return EmployerModel.findOne({ email }).exec();
     }
   }
