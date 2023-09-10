@@ -2,10 +2,12 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { Job } from '../../core/jobs/job.entity'; // Importez votre entité Job définie dans le core
+import { JobsModule } from './jobs.module';
+import { JobService } from 'src/core/jobs/job.interfaces';
 
 
 @Injectable()
-export class JobsService {
+export class JobsService implements JobService {
   constructor(@InjectModel('Job') private readonly jobModel: Model<Job>) {}
 
   async createJob(employerId: string, jobData: any): Promise<Job> {
@@ -17,7 +19,7 @@ export class JobsService {
     return await job.save();
   }
 
-  async updateJob(employerId: string, jobId: string, jobData: any): Promise<Job> {
+  async updateJob(employerId: string, jobId: string, jobData: JobsModule): Promise<Job> {
     // Recherchez l'emploi dans la base de données
     const job = await this.findJobById(jobId);
 
@@ -53,6 +55,10 @@ export class JobsService {
 
   async findAllJobs(): Promise<Job[]> {
     return await this.jobModel.find().exec();
+  }
+
+  async getEmployerJobs(employerId: string): Promise<Job[]> {
+    return await this.jobModel.find({ employer_id: employerId }).exec();
   }
 
   // Vous pouvez ajouter d'autres méthodes de recherche et de filtrage des emplois en fonction de vos besoins.

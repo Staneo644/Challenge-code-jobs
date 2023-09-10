@@ -6,7 +6,7 @@ export interface Job extends Document {
   status: 'actif' | 'expire' | 'a venir';
   description: string;
   domain: string;
-  employer_id: Types.ObjectId; // Référence à l'ID de l'employeur
+  employer_id: Types.ObjectId;
 }
 
 export const JobSchema = new Schema<Job>({
@@ -17,5 +17,4 @@ export const JobSchema = new Schema<Job>({
   employer_id: { type: Schema.Types.ObjectId, ref: 'Employer', required: true }
 });
 
-// Le modèle Mongoose pour l'entité Job
 export const JobModel = mongoose.model<Job>('Job', JobSchema);
