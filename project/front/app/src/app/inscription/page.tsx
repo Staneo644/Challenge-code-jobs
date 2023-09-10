@@ -1,6 +1,6 @@
 'use client'
-import './globals.css';
-import Login from './login';
+import '../globals.css';
+import Register from './register';
 
 
 export default function Home() {
@@ -8,7 +8,7 @@ export default function Home() {
   return(
     <main className="absolute h-full w-full bg-white">
 
-    {Login()}
+    {Register()}
     </main>
   )
 }
