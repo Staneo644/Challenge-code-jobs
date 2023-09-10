@@ -1,0 +1,53 @@
+version: "3.9"
+
+services:
+  back:
+    init: true
+    container_name: back
+    ports:
+      - "3000:3000"
+    depends_on:
+      - db
+    build:
+      context: ./project/back
+    networks:
+      - networkjob
+    restart: unless-stopped
+
+  front:
+    init: true
+    container_name: front
+    depends_on:
+      - back
+    build:
+      context: ./project/front
+    networks:
+      - networkjob
+    restart: unless-stopped
+    ports:
+      - "8080:8080"
+
+  db:
+    init: true
+    container_name: mongodb
+    image: mongo:latest
+    ports:
+      - "27017:27017"
+    volumes:
+      - db_data:/data/db
+    environment:
+      MONGO_INITDB_DATABASE: database
+    networks:
+      - networkjob
+      
+volumes:
+  db_data:
+    driver: local
+    driver_opts:
+      type: none
+      device: ./project/database/data
+      o: bind
+
+networks:
+  networkjob:
+    driver: bridge
