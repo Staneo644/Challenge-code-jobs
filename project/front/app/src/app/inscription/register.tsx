@@ -1,25 +1,30 @@
 import { useState } from "react";
 import Link from "next/link";
+import axios from "axios";
 
+
+interface EmployerData {
+  surname: string;
+  name: string;
+  email: string;
+  enterprise_id: number;
+  // Ajoutez d'autres propriétés si nécessaire
+}
 
 
 const apiUrl = 'http://localhost:3000';
-const createEmployer = async (employerData:any) => {
+const createEmployer = async (employerData:EmployerData) => {
   try {
-    const response = await fetch(`${apiUrl}/employers`, {
-      method: 'POST',
-      body: JSON.stringify(employerData),
-      headers: {
-        'Content-Type': 'application/json', // Specify the content type
-      },
-    });
+    const response = await axios.post(`${apiUrl}/employers`, { 
+      email: employerData.email, 
+      name: employerData.name, 
+      surname: employerData.surname}, );
 
-    if (!response.ok) {
+    if (response.status !== 200) {
       throw new Error(`Erreur HTTP : ${response.status} - ${response.statusText}`);
     }
 
-    const data = await response.json();
-    return data;
+    return response.data;
   } catch (error) {
     console.error('Erreur lors de la création de l\'employeur :', error);
     throw error;
@@ -35,10 +40,11 @@ export default function Register () {
   const connect = () => {
 
     console.log("paramètres : " + email +  " " + name + " " + surname + " Employeur : " + isEmployer );
-    createEmployer({
-      Email: email,
-      name: name,
-      surname: surname,
+    createEmployer( {
+      email: 'example@email.com',
+      name: 'Example Name',
+      surname: 'Example Surname',
+      enterprise_id: 1,
     });
   }
 

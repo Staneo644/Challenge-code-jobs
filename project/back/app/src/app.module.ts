@@ -20,7 +20,7 @@ import { JobsModule } from './applications/jobs/jobs.module';
 export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
     consumer
-      .apply(CorsMiddleware) // Utilisez le middleware CORS personnalisé ici
-      .forRoutes({ path: '*', method: RequestMethod.ALL }); // Autorisez CORS pour toutes les routes
+      .apply(CorsMiddleware)
+      .forRoutes({ path: '*', method: RequestMethod.ALL });
   }
 }
