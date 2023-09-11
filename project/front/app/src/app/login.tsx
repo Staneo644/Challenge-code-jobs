@@ -1,14 +1,25 @@
 import { useState } from "react";
-import Card from "./component/card";
 import Link from "next/link";
+import axios from "axios";
 
+const apiUrl = 'http://localhost:3000';
+
+const getEmployer = async (employerId: string) => {
+  try {
+    const response = await axios.get(`${apiUrl}/employers/${employerId}`);
+    return response.data;
+  } catch (error) {
+    console.error('Erreur lors de la récupération de l\'employeur :', error);
+    throw error;
+  }
+};
 
 export default function Login () {
 
   const [email, setEmail] = useState('');
 
-  const connect = (e:any) => {
-    console.log(email);
+  const connect = () => {
+    getEmployer(email);
   }
 
   return (

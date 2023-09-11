@@ -5,9 +5,23 @@ import { EmployersService } from './employers.service';
 export class EmployersController {
   constructor(private readonly employersService: EmployersService) {}
 
+
+  @Get() // Define a GET route for "/employers"
+  getAllEmployers() {
+    console.log('GET /employers');
+    return true;
+  }
+
   @Post()
   createEmployer(@Body() employerData: any) {
-    return this.employersService.createEmployer(employerData);
+    console.log('create /employers');
+    console.log(employerData);
+    const parsedData = (employerData.parse);
+console.log(parsedData);
+
+
+    //return this.employersService.createEmployer(employerData);
+
   }
 
   @Put(':employerId')

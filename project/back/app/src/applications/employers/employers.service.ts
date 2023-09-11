@@ -1,7 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { Model } from 'mongoose';
 import { Employer } from '../../core/employers/employer.entity';
-import { InjectModel } from '@nestjs/mongoose';
 import { JobsService } from '../jobs/jobs.service';
 import { EmployerService } from '../../core/employers/employer.interfaces';
 import { EmployerModel } from '../../core/employers/employer.entity';
@@ -13,7 +11,7 @@ export class EmployersService implements EmployerService {
   
     
 
-    async createEmployer(employerData: Partial<Employer>): Promise<Employer> {
+    async createEmployer(employerData: Employer): Promise<Employer> {
       const createdEmployer = new EmployerModel(employerData);
       return createdEmployer.save();
     }
