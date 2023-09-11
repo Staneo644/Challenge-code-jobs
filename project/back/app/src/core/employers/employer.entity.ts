@@ -1,18 +1,27 @@
 import { Document, Schema, Types } from 'mongoose';
 import mongoose from 'mongoose';
+import { IsNotEmpty, IsEmail } from 'class-validator';
 
-export interface Employer extends Document {
+export class Employer {
+  @IsNotEmpty({ message: 'email is required' })
+  @IsEmail({}, { message: 'email is not valid' })
   email: string;
-  name: string;
+
+  @IsNotEmpty({ message: 'surname is required' })
   surname: string;
-  enterprise_id: Types.ObjectId;
+
+  @IsNotEmpty({ message: 'name is required' })
+  name: string;
+
+  @IsNotEmpty({ message: 'enterprise_id is required' })
+  enterprise_name: string;
 }
 
 export const EmployerSchema = new Schema<Employer>({
   email: { type: String, required: true, unique: true },
   name: { type: String, required: true },
   surname: { type: String, required: true },
-  enterprise_id: { type: Schema.Types.ObjectId, ref: 'Enterprise', required: true }
+  enterprise_name: { type: String, required: true }
 });
 
 export const EmployerModel = mongoose.model<Employer>('Employer', EmployerSchema);

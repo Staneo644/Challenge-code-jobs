@@ -2,17 +2,13 @@ import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { DatabaseModule } from './shared/database/database.module';
-import { ExpressAdapter } from '@nestjs/platform-express';
-import * as express from 'express';
 import { NestModule, MiddlewareConsumer, RequestMethod } from '@nestjs/common';
 import { CorsMiddleware } from './cors.middleware'; // Créez un middleware CORS personnalisé
-import { EmployersController } from './applications/employers/employers.controller';
-const allowedOrigins = ['http://localhost:8080'];
 import { EmployersModule } from './applications/employers/employers.module';
 import { JobsModule } from './applications/jobs/jobs.module';
-
+import { EnterprisesModule } from './applications/enterprises/enterprises.module';
 @Module({
-  imports: [DatabaseModule, EmployersModule, JobsModule],
+  imports: [DatabaseModule, EmployersModule, JobsModule, EnterprisesModule],
   controllers: [AppController],
   providers: [AppService],
 })

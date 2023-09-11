@@ -1,25 +1,23 @@
 import { useState } from "react";
 import Link from "next/link";
-import axios from "axios";
-
-const apiUrl = 'http://localhost:3000';
-
-const getEmployer = async (employerId: string) => {
-  try {
-    const response = await axios.get(`${apiUrl}/employers/${employerId}`);
-    return response.data;
-  } catch (error) {
-    console.error('Erreur lors de la récupération de l\'employeur :', error);
-    throw error;
-  }
-};
+import {getEmployer} from "./communication/employer";
+import { EmployerData } from "./communication/global";
 
 export default function Login () {
 
   const [email, setEmail] = useState('');
+  const [unValidEmail, setUnValidEmail] = useState(false);
 
-  const connect = () => {
-    getEmployer(email);
+  const connect = (event:any) => {
+    event.preventDefault();
+    getEmployer(email).then((data) => {
+      if (data !== null) {
+        
+
+      }
+      else
+        setUnValidEmail(true)
+    })
   }
 
   return (
@@ -53,6 +51,11 @@ export default function Login () {
                   className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                 />
               </div>
+                {unValidEmail && 
+                  <div className="mt-2 text-sm text-red-600" id="email-error">
+                    Adresse email pas reconnue
+                  </div>
+                }
             </div>
 
 
