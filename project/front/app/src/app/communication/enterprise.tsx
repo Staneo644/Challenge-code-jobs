@@ -2,14 +2,13 @@ import { EnterpriseData, apiUrl } from "./global";
 import axios, { Axios, AxiosError } from "axios";
 
 export const createEnterprise = async (entreprise:EnterpriseData) => {
-    console.log(entreprise)
-    console.log(`${apiUrl}/enterprises`);
     try {
         const response = await axios.post(`${apiUrl}/enterprises`, {email_patron: entreprise.email_patron, title: entreprise.title} );
     
         if (response.status !== 201) {
             throw new Error(`Erreur HTTP : ${response.status} - ${response.statusText}`);
         }
+        console.log(response.data)
         if (response.data === "") {
             return false;
         }

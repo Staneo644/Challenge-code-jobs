@@ -15,10 +15,15 @@ export class EmployersDomain implements IEmployersDomain {
 
     async createEmployer(employerData: Employer): Promise<Employer> {
         const res = await this.isEmployer(employerData.email);
+        
         if (res) {
             return(null)
         }
         return this.employerService.createEmployer(employerData);
+    }
+
+    async getEmployers(): Promise<Employer[]> {
+        return this.employerService.getEmployers();
     }
   
     async updateEmployer(email: string, employerData: Partial<Employer>): Promise<Employer> {

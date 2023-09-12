@@ -7,8 +7,9 @@ import { CorsMiddleware } from './cors.middleware'; // Créez un middleware CORS
 import { EmployersModule } from './applications/employers/employers.module';
 import { JobsModule } from './applications/jobs/jobs.module';
 import { EnterprisesModule } from './applications/enterprises/enterprises.module';
+import { JobSeekersModule } from './applications/job-seekers/job-seekers.module';
 @Module({
-  imports: [DatabaseModule, EmployersModule, JobsModule, EnterprisesModule],
+  imports: [DatabaseModule, EmployersModule, JobsModule, EnterprisesModule, JobSeekersModule],
   controllers: [AppController],
   providers: [AppService],
 })

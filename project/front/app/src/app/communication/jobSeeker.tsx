@@ -1,10 +1,10 @@
 import axios from 'axios';
-import { EmployerData, apiUrl } from './global';
+import { jobSeekerData, apiUrl } from './global';
 
 
-export const createEmployer = async (employerData:EmployerData) => {
+export const createJobSeeker = async (JobSeekerData:jobSeekerData) => {
     try {
-      const response = await axios.post(`${apiUrl}/employers`, employerData );
+      const response = await axios.post(`${apiUrl}/jobseekers`, JobSeekerData );
   
       if (response.status !== 201) {
         throw new Error(`Erreur HTTP : ${response.status} - ${response.statusText}`);
@@ -21,9 +21,9 @@ export const createEmployer = async (employerData:EmployerData) => {
   };
 
 
-export const getEmployer = async (email:string) => {
+export const getJobSeeker = async (email:string) => {
  try {
-  const response = await axios.get(`${apiUrl}/employers/${email}`);
+  const response = await axios.get(`${apiUrl}/jobseekers/${email}`);
     
     if (response.status !== 200) {
       return null;
@@ -33,11 +33,10 @@ export const getEmployer = async (email:string) => {
       return null;
     }
     
-    const data: EmployerData = {
+    const data: jobSeekerData = {
       email: response.data.email,
       name: response.data.name,
       surname: response.data.surname,
-      enterprise_name: response.data.enterprise_name
     };
     
     return data;

@@ -82,6 +82,9 @@ create: build
 database :
 	docker-compose up db
 
+adminer :
+	docker-compose up adminer
+
 back: 
 	docker-compose up back
 

@@ -28,7 +28,7 @@ export class EmployersController {
 
   @Options()
   handleOptions(@Res() res: Response) {
-    console.log('OPTIONS /employers');
+    console.log('OPTIONS request received for employers');
     res.header('Access-Control-Allow-Origin', 'http://localhost:8080');
     res.header('Access-Control-Allow-Methods', 'GET,HEAD,PUT,PATCH,POST,DELETE');
     res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization');
@@ -42,6 +42,12 @@ export class EmployersController {
   createEmployer(@Body() employerJSON: Employer) {
     console.log('POST request received for employer: ', employerJSON);
     return this.employersService.createEmployer(employerJSON);
+  }
+
+  @Get()
+  getEmployers() {
+    console.log('GET request received for all employers');
+    return this.employersService.getEmployers();
   }
 
   @Put(':employerId')

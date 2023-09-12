@@ -8,22 +8,26 @@ export class JobSeekersDomain {
     constructor(private readonly jobSeekerService: JobSeekersService) {}
 
     async createJobSeeker(JobSeekerData: JobSeeker): Promise<JobSeeker> {
-        const ret = this.JobSeekerExists(JobSeekerData.email);
+        const ret = await this.isJobSeeker(JobSeekerData.email);
         if (ret) {
             return(null)
         }
         return this.jobSeekerService.createJobSeeker(JobSeekerData);
     }
+
+    async getAllJobSeekers(): Promise<JobSeeker[]> {
+        return this.jobSeekerService.findAllJobSeeker();
+    }
   
     async updateJobSeeker(email: string, JobSeekerData: Partial<JobSeeker>): Promise<JobSeeker> {
-        const ret = this.JobSeekerExists(JobSeekerData.email);
+        const ret = this.isJobSeeker(JobSeekerData.email);
         if (!ret) {
             return(null)
         }
         return this.jobSeekerService.updateJobSeeker(email, JobSeekerData);
     }
 
-    async JobSeekerExists(email: string): Promise<boolean> {
+    async isJobSeeker(email: string): Promise<boolean> {
         const ret = await this.jobSeekerService.findOneJobSeeker(email);
         if (!ret) {
             return false;

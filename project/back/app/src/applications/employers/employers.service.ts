@@ -14,6 +14,10 @@ export class EmployersService implements IEmployersService {
       const createdEmployer = new EmployerModel(employerData);
       return createdEmployer.save();
     }
+
+    async getEmployers(): Promise<Employer[]> {
+      return EmployerModel.find().exec();
+    } 
   
     async updateEmployer(email: string, employerData: Partial<Employer>): Promise<Employer> {
       return await EmployerModel.findOneAndUpdate(

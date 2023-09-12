@@ -1,3 +1,6 @@
+import { data } from "autoprefixer";
+import { getEmployer } from "./employer";
+import { getJobSeeker } from "./jobSeeker";
 
 export const apiUrl = 'http://localhost:3000';
 
@@ -19,3 +22,26 @@ export interface User {
     surname: string;
     is_employer: boolean;
 }
+
+export interface jobSeekerData {
+    email: string;
+    surname: string;
+    name: string;
+}
+
+export const userExist = async (email:string) => {
+    
+    const responseEmployer = await getEmployer(email);
+    if (responseEmployer !== null) {
+        console.log(responseEmployer.email, " already exist");
+        return true;
+    }
+    const responseJobSeeker = await getJobSeeker(email);
+    if (responseJobSeeker !== null) {
+        console.log(responseJobSeeker.email, " already exist");
+        return true;
+    }
+
+    
+    return false;
+} 

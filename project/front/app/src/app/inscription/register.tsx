@@ -1,10 +1,11 @@
-import { useState } from "react";
+import { use, useState } from "react";
 import Link from "next/link";
-import {createEnterprise, deleteEnterprise, getEnterprise} from "../communication/enterprise";
-import { EnterpriseData } from "../communication/global";
+import {createEnterprise, getEnterprise} from "../communication/enterprise";
+import { EnterpriseData, userExist } from "../communication/global";
 import { createEmployer } from "../communication/employer";
 import validator from "validator";
 import { useRouter } from "next/navigation";
+import { createJobSeeker } from "../communication/jobSeeker";
 
 
 export default function Register () {
@@ -31,31 +32,32 @@ export default function Register () {
     if (validator.isEmail(email) === false) {
       console.log("email format error")
       setErrorFormatEmail(true);
+      setErrorEmail(false);
       return;
     }
-    if (searchEnterprise) {
-        createEnterprise({email_patron: email, title: enterpriseName}).then((data) => {
-          console.log(data)
-          if (data === true) {
-
-            createEmployer({email: email, name: name, surname: surname, enterprise_name: enterpriseName}).then((dataEmployer) => {
-            if (dataEmployer === true)
-            {
-              router.push('/accueil/recherche-de-jobs?email='+email)
+    userExist(email).then((data) => {
+      if (data === true) {
+        setErrorEmail(true);
+        setErrorFormatEmail(false);
+        return;
+      }
+      
+      if (searchEnterprise) {
+          createEnterprise({email_patron: email, title: enterpriseName}).then((data) => {
+            console.log(data)
+            if (data === true) {
+              createEmployer({email: email, name: name, surname: surname, enterprise_name: enterpriseName}).then((dataEmployer) => {
+                if (dataEmployer === true) {
+                  router.push('/accueil/recherche-de-jobs?email='+email)
+                }
+              })
             }
             else {
-              setSearchEnterprise(false);
-              setErrorEmail(true);
-              deleteEnterprise(enterpriseName);
+              setErrorEnterprise(true);
             }
           })
-        }
-          else {
-            setErrorEnterprise(true);
-          }
-        })
-      return
-    }
+        return
+      }
     if (!searchEnterprise && isEmployer) {
       getEnterprise().then((data) => {
         setEntrepriseList(data)
@@ -64,8 +66,16 @@ export default function Register () {
       setSearchEnterprise(true)
       return
     }
-    return
-  }
+
+    if (!isEmployer) {
+      createJobSeeker({email: email, name: name, surname: surname}).then((data) => {
+        if (data === true) {
+          router.push('/accueil/recherche-de-jobs?email='+email)
+        }
+      })
+    }
+    
+  })}
 
   const handleItemClick = (title:string) => {
     setSelectedEnterprise(title);
@@ -86,9 +96,12 @@ export default function Register () {
             alt="Your Company"
           />
           <h2 className="mt-10 text-center text-2xl font-bold leading-9 tracking-tight text-gray-900">
-          {searchEnterprise && <>Définit ton entreprise</>}
+          {searchEnterprise && <>Choisit ton entreprise</>}
           {!searchEnterprise && <>Nouveau Compte</>}
           </h2>
+          <h3>
+          {searchEnterprise && selectedEnterprise !== '' && <p className=" text-center text-sm text-gray-700">Entreprise sélectionnée : {selectedEnterprise}</p>}
+          </h3>
         </div>
 
         <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
@@ -156,21 +169,23 @@ export default function Register () {
             </> }
 
             {searchEnterprise && <>
-              <ul role="list" className="p-6 divide-y divide-slate-200 max-h-100 overflow-y-auto">
-            
+              <ul role="list" className="p-6 divide-y divide-slate-200">
+
               
+            <div className="relative h-[270px] overflow-auto">
               {enterpriseList.map((enterprise) => (
-              <li
+                <li
                 key={enterprise.title}
-                className={`flex py-4 ${selectedEnterprise === enterprise.title ? 'bg-gray-200 shadow rounded' : ''}`}
+                className={`flex py-4 ${selectedEnterprise === enterprise.title ? 'bg-gray-200 shadow-lg rounded-md ' : ''}`}
                 onClick={() => handleItemClick(enterprise.title)}
-              >
+                >
                 <div className="ml-3 overflow-hidden">
                   <p className="text-sm font-medium text-slate-900">{enterprise.title}</p>
                   <p className="text-sm text-slate-500 truncate">{enterprise.email_patron}</p>
                 </div>
               </li>
               ))}
+            </div>
 
               </ul>
               

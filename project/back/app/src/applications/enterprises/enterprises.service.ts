@@ -1,6 +1,4 @@
 import { Injectable } from '@nestjs/common';
-import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
 import { Enterprise, enterpriseModel } from '../../core/enterprises/enterprise.entity';
 import { NotFoundException } from '@nestjs/common';
 
@@ -24,7 +22,7 @@ export class EnterprisesService {
   async getEnterpriseByTitle(title: string): Promise<Enterprise> {
     const enterprise = await enterpriseModel.findOne({ title }).exec();
     if (!enterprise) {
-      throw new NotFoundException(`Entreprise avec le nom ${title} introuvable`);
+      return null;
     }
     return enterprise;
   }
