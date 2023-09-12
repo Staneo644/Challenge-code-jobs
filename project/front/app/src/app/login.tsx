@@ -2,17 +2,20 @@ import { useState } from "react";
 import Link from "next/link";
 import {getEmployer} from "./communication/employer";
 import { EmployerData } from "./communication/global";
+import { useRouter } from "next/navigation";
 
 export default function Login () {
 
   const [email, setEmail] = useState('');
   const [unValidEmail, setUnValidEmail] = useState(false);
+  const router = useRouter();
 
   const connect = (event:any) => {
     event.preventDefault();
     getEmployer(email).then((data) => {
-      if (data !== null) {
-        
+      console.log(data)
+      if (data && data !== null) {
+        router.push('/accueil/recherche-de-jobs?email='+data.email)
 
       }
       else

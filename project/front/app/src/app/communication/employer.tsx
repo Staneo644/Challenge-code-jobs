@@ -19,19 +19,26 @@ export const createEmployer = async (employerData:EmployerData) => {
 
 
 export const getEmployer = async (email:string) => {
-  axios.get(`${apiUrl}/employers/${email}`)
-    .then((response) => {
-      if (response.status !== 200) {
-        return(null)
-      }
-      console.log(response.data);
-      return ({email: response.data.email, 
-        name: response.data.name, 
-        surname: response.data.surname, 
-        enterprise_name: response.data.enterprise_name})})
+ try {
+  const response = await axios.get(`${apiUrl}/employers/${email}`);
     
-    .catch((error) => {
+    if (response.status !== 200) {
+      return null;
+    }
+    
+    const data: EmployerData = {
+      email: response.data.email,
+      name: response.data.name,
+      surname: response.data.surname,
+      enterprise_name: response.data.enterprise_name
+    };
+    
+    return data;
+ }
+    
+    catch(error){
       console.error('Erreur lors de la vérification de l\'employeur :', error);
       console.error(error);
-    });
-  }
+      return(null)
+    };
+  } 
