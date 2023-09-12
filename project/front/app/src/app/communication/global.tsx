@@ -13,4 +13,9 @@ export interface EnterpriseData {
     title: string;
 }
 
-
+export interface User {
+    email: string;
+    name: string;
+    surname: string;
+    is_employer: boolean;
+}

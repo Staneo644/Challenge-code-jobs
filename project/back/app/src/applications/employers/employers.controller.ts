@@ -1,8 +1,8 @@
 import { Controller, Post, Put, Delete, Param, Body, Get, Res, Options, UsePipes, ValidationPipe } from '@nestjs/common';
-import { EmployersService } from './employers.service';
 import { IsNotEmpty } from 'class-validator';
 import { Employer } from 'src/core/employers/employer.entity';
 import { Response } from 'express';
+import { EmployersDomain } from './employers.domain.service';
 
 interface EmployerData {
   surname: string;
@@ -24,14 +24,7 @@ export class createEmployer {
 
 @Controller('employers')
 export class EmployersController {
-  constructor(private readonly employersService: EmployersService) {}
-
-
-  @Get() // Define a GET route for "/employers"
-  getAllEmployers() {
-    console.log('GET /employers');
-    return true;
-  }
+  constructor(private readonly employersService: EmployersDomain) {}
 
   @Options()
   handleOptions(@Res() res: Response) {
@@ -47,24 +40,25 @@ export class EmployersController {
   @Post()
   @UsePipes(ValidationPipe)
   createEmployer(@Body() employerJSON: Employer) {
-    console.log('create /employers');
-    console.log(employerJSON);
+    console.log('POST request received for employer: ', employerJSON);
     return this.employersService.createEmployer(employerJSON);
-    
   }
 
   @Put(':employerId')
   updateEmployer(@Param('employerId') employerEmail: string, @Body() employerData: any) {
+    console.log(`PUT request received for employer: ${employerEmail} with data: `, employerData);
     return this.employersService.updateEmployer(employerEmail, employerData);
   }
 
   @Delete(':employerId')
   deleteEmployer(@Param('employerId') employerEmail: string) {
+    console.log(`DELETE request received for employer: ${employerEmail}`);
     return this.employersService.deleteEmployer(employerEmail);
   }
 
   @Get(':employerId')
   getEmployer(@Param('employerId') employerEmail: string) {
+    console.log(`GET request received for employer: ${employerEmail}`);
     return this.employersService.getEmployer(employerEmail);
   }
 }

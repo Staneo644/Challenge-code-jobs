@@ -10,7 +10,10 @@ export const createEmployer = async (employerData:EmployerData) => {
         throw new Error(`Erreur HTTP : ${response.status} - ${response.statusText}`);
       }
       console.log(response.data)
-      return response.data;
+      if (response.data === "") {
+        return false;
+      }
+      return true;
     } catch (error) {
       console.error('Erreur lors de la création de l\'employeur :', error);
       throw error;

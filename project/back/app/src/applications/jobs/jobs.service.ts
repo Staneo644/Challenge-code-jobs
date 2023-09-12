@@ -1,10 +1,10 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { Job, JobModel } from '../../core/jobs/job.entity'; // Importez votre entité Job définie dans le core
 import { JobsModule } from './jobs.module';
-import { JobService } from 'src/core/jobs/job.interfaces';
+import { IJobsService } from 'src/core/jobs/job.interfaces';
 
 @Injectable()
-export class JobsService implements JobService {
+export class JobsService implements IJobsService {
 
 
   async createJob( jobData: any): Promise<Job> {

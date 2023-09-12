@@ -1,35 +1,60 @@
 import { useState } from "react";
 import Link from "next/link";
-import {createEnterprise, getEnterprise} from "../communication/enterprise";
+import {createEnterprise, deleteEnterprise, getEnterprise} from "../communication/enterprise";
 import { EnterpriseData } from "../communication/global";
 import { createEmployer } from "../communication/employer";
-
+import validator from "validator";
+import { useRouter } from "next/navigation";
 
 
 export default function Register () {
-  const [selectedEnterprise, setSelectedEnterprise] = useState('')
+  const router = useRouter();
+
   const [email, setEmail] = useState('');
   const [name, setName] = useState('');
-  const [searchEnterprise, setSearchEnterprise] = useState(false);
-  const [isEmployer , setIsEmployer] = useState(false);
   const [surname, setSurname] = useState('');
+  
+  const [isEmployer , setIsEmployer] = useState(false);
+  const [selectedEnterprise, setSelectedEnterprise] = useState('')
+  const [searchEnterprise, setSearchEnterprise] = useState(false);
   const [enterpriseName, setEnterpriseName] = useState('');
-  const [enterpriseList, setEntrepriseList] = useState<EnterpriseData[]>  ([{email_patron: 'test', title: 'test'}, {email_patron: 'test2', title: 'test2'}]);
+  
+  const [enterpriseList, setEntrepriseList] = useState<EnterpriseData[]>  ([]);
+  const [errorEnterprise, setErrorEnterprise] = useState(false);
+  const [errorEmail, setErrorEmail] = useState(false);
+  const [errorFormatEmail, setErrorFormatEmail] = useState(false);
 
   const connect = (event:any) => {
     event.preventDefault();
     if (!email || !name || !surname)
       return;
+    if (validator.isEmail(email) === false) {
+      console.log("email format error")
+      setErrorFormatEmail(true);
+      return;
+    }
     if (searchEnterprise) {
-          createEnterprise({email_patron: email, title: enterpriseName}).then((data) => {
+        createEnterprise({email_patron: email, title: enterpriseName}).then((data) => {
           console.log(data)
+          if (data === true) {
+
+            createEmployer({email: email, name: name, surname: surname, enterprise_name: enterpriseName}).then((dataEmployer) => {
+            if (dataEmployer === true)
+            {
+              router.push('/accueil/recherche-de-jobs?email='+email)
+            }
+            else {
+              setSearchEnterprise(false);
+              setErrorEmail(true);
+              deleteEnterprise(enterpriseName);
+            }
           })
-          
-          createEmployer({email: email, name: name, surname: surname, enterprise_name: enterpriseName}).then((data) => {
-            console.log(data)
-          })
-        return
-      
+        }
+          else {
+            setErrorEnterprise(true);
+          }
+        })
+      return
     }
     if (!searchEnterprise && isEmployer) {
       getEnterprise().then((data) => {
@@ -46,6 +71,10 @@ export default function Register () {
     setSelectedEnterprise(title);
   };
 
+
+  const handleLabelClick = () => {
+    setSelectedEnterprise('');
+  };
 
   return (
     <>
@@ -80,6 +109,8 @@ export default function Register () {
                     className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                     />
                 </div>
+                {errorFormatEmail && <p className="text-sm text-red-500">L'email n'est pas au bon format</p>}
+                {errorEmail && <p className="text-sm text-red-500">L'email existe déjà</p>}
               </div>
 
               <div>
@@ -125,13 +156,13 @@ export default function Register () {
             </> }
 
             {searchEnterprise && <>
-              <ul role="list" className="p-6 divide-y divide-slate-200">
+              <ul role="list" className="p-6 divide-y divide-slate-200 max-h-100 overflow-y-auto">
             
-
+              
               {enterpriseList.map((enterprise) => (
               <li
                 key={enterprise.title}
-                className="flex py-4 first:pt-0 last:pb-0"
+                className={`flex py-4 ${selectedEnterprise === enterprise.title ? 'bg-gray-200 shadow rounded' : ''}`}
                 onClick={() => handleItemClick(enterprise.title)}
               >
                 <div className="ml-3 overflow-hidden">
@@ -151,11 +182,13 @@ export default function Register () {
                   <input
                     id="name"
                     type="name"
-                    onChange={(e) => setEnterpriseName(e.target.value)}
+                    onChange={(e) => {setEnterpriseName(e.target.value); handleLabelClick()}}
+                    onClick={handleLabelClick}
                     required
                     className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                     />
                 </div>
+                {errorEnterprise && <p className="text-sm text-red-500">L'entreprise existe déjà</p>}
               </div>
               </>
             

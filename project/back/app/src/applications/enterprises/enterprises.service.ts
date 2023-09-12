@@ -6,7 +6,7 @@ import { NotFoundException } from '@nestjs/common';
 
 @Injectable()
 export class EnterprisesService {
-
+  
 
   async createEnterprise(enterpriseData: Partial<Enterprise>): Promise<Enterprise> {
     const createdEnterprise = new enterpriseModel(enterpriseData);
@@ -29,11 +29,16 @@ export class EnterprisesService {
     return enterprise;
   }
 
-  async deleteEnterprise(title: string): Promise<void> {
-    const deletedEmployer = await enterpriseModel.findOneAndDelete({ title });
-  
-      if (!deletedEmployer) {
-        throw new NotFoundException(`Enterprise with title ${title} not found`);
-      }
+  async getEnterpriseTitle(email: string): Promise<string | null> {
+    const employer = await enterpriseModel.findOne({ email }).exec();
+    if (employer) {
+      return employer.title; 
+    } else {
+      return null;
+    }
+  }
+
+  async deleteEnterprise(title: string): Promise<Enterprise> {
+    return await enterpriseModel.findOneAndDelete({ title });
   }
 }

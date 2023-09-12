@@ -1,12 +1,11 @@
 import { Injectable } from '@nestjs/common';
 import { Employer } from '../../core/employers/employer.entity';
 import { JobsService } from '../jobs/jobs.service';
-import { EmployerService } from '../../core/employers/employer.interfaces';
+import { IEmployersService } from '../../core/employers/employer.interfaces';
 import { EmployerModel } from '../../core/employers/employer.entity';
-import { NotFoundException } from '@nestjs/common';
 
 @Injectable()
-export class EmployersService implements EmployerService {
+export class EmployersService implements IEmployersService {
     constructor(private readonly jobsService: JobsService) {}
   
     
@@ -17,25 +16,15 @@ export class EmployersService implements EmployerService {
     }
   
     async updateEmployer(email: string, employerData: Partial<Employer>): Promise<Employer> {
-      const updatedEmployer = await EmployerModel.findOneAndUpdate(
+      return await EmployerModel.findOneAndUpdate(
         { email },
         employerData,
         { new: true },
       );
-  
-      if (!updatedEmployer) {
-        throw new NotFoundException(`Employer with email ${email} not found`);
-      }
-  
-      return updatedEmployer;
     }
   
     async deleteEmployer(email: string): Promise<void> {
-      const deletedEmployer = await EmployerModel.findOneAndDelete({ email });
-  
-      if (!deletedEmployer) {
-        throw new NotFoundException(`Employer with email ${email} not found`);
-      }
+      return await EmployerModel.findOneAndDelete({ email });
     }
   
     async getEmployer(email: string): Promise<Employer | null> {
