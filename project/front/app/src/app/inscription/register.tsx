@@ -1,11 +1,10 @@
 import { use, useState } from "react";
 import Link from "next/link";
 import {createEnterprise, getEnterprise} from "../communication/enterprise";
-import { EnterpriseData, userExist } from "../communication/global";
-import { createEmployer } from "../communication/employer";
+import { EnterpriseData, userEnum } from "../communication/global";
+import { createUser, userExist } from "../communication/user";
 import validator from "validator";
 import { useRouter } from "next/navigation";
-import { createJobSeeker } from "../communication/jobSeeker";
 
 
 export default function Register () {
@@ -46,10 +45,12 @@ export default function Register () {
           createEnterprise({email_patron: email, title: enterpriseName}).then((data) => {
             console.log(data)
             if (data === true) {
-              createEmployer({email: email, name: name, surname: surname, enterprise_name: enterpriseName}).then((dataEmployer) => {
-                if (dataEmployer === true) {
-                  router.push('/accueil/recherche-de-jobs?email='+email)
+              createUser({email: email, name: name, surname: surname, enterprise_name: enterpriseName}).then((dataEmployer) => {
+                console.log(dataEmployer)
+                if (dataEmployer === userEnum.isEmployer) {
+                router.push('/accueil/recruteur?email='+email)
                 }
+                
               })
             }
             else {
@@ -68,10 +69,10 @@ export default function Register () {
     }
 
     if (!isEmployer) {
-      createJobSeeker({email: email, name: name, surname: surname}).then((data) => {
-        if (data === true) {
-          router.push('/accueil/recherche-de-jobs?email='+email)
-        }
+      createUser({email: email, name: name, surname: surname}).then((data) => {
+        if (data === userEnum.isJobSeeker) {
+          router.push('/accueil/candidat?email='+email)
+          }
       })
     }
     

@@ -1,6 +1,10 @@
 import { Fragment, useRef, useState } from 'react'
 import { Dialog, Transition } from '@headlessui/react'
 import { ExclamationTriangleIcon } from '@heroicons/react/24/outline'
+import { deleteUser } from '../communication/user';
+import { useRouter } from 'next/navigation';
+import { useEffect } from 'react';
+import { usePathname, useSearchParams } from 'next/navigation';
 
 interface DestroyCardProps {
   onClose: () => void;
@@ -8,6 +12,15 @@ interface DestroyCardProps {
 
 export default function DestroyCard({ onClose }: DestroyCardProps){
   const [open, setOpen] = useState(true)
+  const [email, setEmail] = useState<string|null>()
+  const router = useRouter()
+  const pathname = usePathname()
+  const searchParams = useSearchParams()  
+
+  useEffect(() => {
+    const url = `${pathname}?${searchParams}`;
+    setEmail(searchParams.get('email'));
+  }, [pathname, searchParams])
 
   const cancelButtonRef = useRef(null)
 
@@ -49,8 +62,7 @@ export default function DestroyCard({ onClose }: DestroyCardProps){
                       </Dialog.Title>
                       <div className="mt-2">
                         <p className="text-sm text-gray-500">
-                          Are you sure you want to deactivate your account? All of your data will be permanently
-                          removed. This action cannot be undone.
+                          Êtes-vous sûr de vouloir supprimer votre compte ? Toutes vos données seront perdues et les entreprises que vous avez créé seront supprimées.
                         </p>
                       </div>
                     </div>
@@ -60,7 +72,7 @@ export default function DestroyCard({ onClose }: DestroyCardProps){
                   <button
                     type="button"
                     className="inline-flex w-full justify-center rounded-md bg-red-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-red-500 sm:ml-3 sm:w-auto"
-                    onClick={() => {onClose(); }}
+                    onClick={() => {onClose(); if (email) deleteUser(email); router.push('/') }}
                   >
                     Supprimer
                   </button>

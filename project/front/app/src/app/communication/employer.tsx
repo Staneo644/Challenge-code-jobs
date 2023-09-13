@@ -2,25 +2,6 @@ import axios from 'axios';
 import { EmployerData, apiUrl } from './global';
 
 
-export const createEmployer = async (employerData:EmployerData) => {
-    try {
-      const response = await axios.post(`${apiUrl}/employers`, employerData );
-  
-      if (response.status !== 201) {
-        throw new Error(`Erreur HTTP : ${response.status} - ${response.statusText}`);
-      }
-      console.log(response.data)
-      if (response.data === "") {
-        return false;
-      }
-      return true;
-    } catch (error) {
-      console.error('Erreur lors de la création de l\'employeur :', error);
-      throw error;
-    }
-  };
-
-
 export const getEmployer = async (email:string) => {
  try {
   const response = await axios.get(`${apiUrl}/employers/${email}`);

@@ -20,11 +20,8 @@ export class EnterprisesService {
   }
 
   async getEnterpriseByTitle(title: string): Promise<Enterprise> {
-    const enterprise = await enterpriseModel.findOne({ title }).exec();
-    if (!enterprise) {
-      return null;
-    }
-    return enterprise;
+    return await enterpriseModel.findOne({ title }).exec();
+    
   }
 
   async getEnterpriseTitle(email: string): Promise<string | null> {
@@ -38,5 +35,9 @@ export class EnterprisesService {
 
   async deleteEnterprise(title: string): Promise<Enterprise> {
     return await enterpriseModel.findOneAndDelete({ title });
+  }
+
+  async getEnterprisesByEmail(email_patron: string): Promise<Enterprise[]> {
+    return await enterpriseModel.find({ email_patron }).exec();
   }
 }

@@ -18,12 +18,6 @@ export class JobSeekersController {
     res.status(200).send(); // Respond with a 200 OK status for the OPTIONS request.
   }
 
-  @Post()
-  @UsePipes(ValidationPipe)
-  create(@Body() jobSeekerData: JobSeeker): Promise<JobSeeker> {
-    console.log('POST request received for jobSeeker: ', jobSeekerData);
-    return this.jobSeekersService.createJobSeeker(jobSeekerData);
-  }
 
   @Get()
   findAll(): Promise<JobSeeker[]> {
@@ -42,11 +36,5 @@ export class JobSeekersController {
   update(@Param('id') email: string, @Body() jobSeekerData: Partial<JobSeeker>): Promise<JobSeeker | undefined> {
     console.log('PUT request received for jobSeeker: ', email);
     return this.jobSeekersService.updateJobSeeker(email, jobSeekerData);
-  }
-
-  @Delete(':id')
-  remove(@Param('id') email: string): Promise<void> {
-    console.log('DELETE request received for jobSeeker: ', email);
-    return this.jobSeekersService.deleteJobSeeker(email);
   }
 }

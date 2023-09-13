@@ -12,17 +12,27 @@ export class UsersDomain {
         private readonly employersDomain: EmployersDomain, 
         private readonly jobSeekersDomain: JobSeekersDomain){}
 
-    async createUser(user: Employer | JobSeeker): Promise<Employer | JobSeeker | null> {
+    async createUser(user: Employer | JobSeeker): Promise<userEnum> {
         const res = await this.checkUser(user.email);
+        console.log(res)
         if (res === userEnum.notExist) {
-            if (user instanceof Employer) {
-                return this.employersDomain.createEmployer(user);
+            if ( 'enterprise_name' in user) {
+                const x = await this.employersDomain.createEmployer(user);
+            
+                return userEnum.isEmployer;
             }
-            if (user instanceof JobSeeker) {
-                return this.jobSeekersDomain.createJobSeeker(user);
+            else {
+                const x = await this.jobSeekersDomain.createJobSeeker(user);
+            
+                return userEnum.isJobSeeker;
             }
+            
         }
+        return res;
     }
+
+
+   
 
     async getUsers(): Promise<{employers: Employer[], jobSeekers: JobSeeker[]}> {
         const employers = await this.employersDomain.getEmployers();
@@ -30,13 +40,13 @@ export class UsersDomain {
         return {employers, jobSeekers};
     }
   
-    async deleteUser(email: string): Promise<userEnum> {
-      const user = await this.checkUser(email);
+    async deleteUser(email: string) {
+        const user = await this.checkUser(email);
         if (user === userEnum.isEmployer) {
-            this.employersDomain.deleteEmployer(email);
+            return this.employersDomain.deleteEmployer(email);
         }
         if (user === userEnum.isJobSeeker) {
-            this.jobSeekersDomain.deleteJobSeeker(email);
+            return this.jobSeekersDomain.deleteJobSeeker(email);
         }
         return user;
     }

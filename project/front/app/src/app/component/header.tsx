@@ -5,23 +5,31 @@ import { ReactNode } from 'react'
 import '../globals.css'
 import DestroyCard from './card'
 import { useState } from 'react'
-
+import { useRouter } from 'next/navigation'
+import { useEffect } from 'react'
+import { usePathname, useSearchParams } from 'next/navigation'
 const user = {
   name: 'Tom Cook',
   email: 'tom@example.com',
   imageUrl:
     'https://s2.qwant.com/thumbr/0x380/e/d/de00606904e6cfffb72b93625574e7f6d55c8b345140aea0c94ae4e4e727c0/vector-sign-of-user-icon.jpg?u=https%3A%2F%2Fstatic.vecteezy.com%2Fsystem%2Fresources%2Fpreviews%2F000%2F574%2F512%2Foriginal%2Fvector-sign-of-user-icon.jpg&q=0&b=1&p=0&a=0',
 }
-const navigation = [
-  { name: 'Dashddddboard', href: '#', current: true },
-  { name: 'Team', href: '#', current: false },
-  { name: 'Projects', href: '#', current: false },
-  { name: 'Calendar', href: '#', current: false },
-  { name: 'Reports', href: '#', current: false },
+const navigationEmployer = [
+  { name: 'Accueil', link: '/recruteur', current: true },
+  { name: 'Mes offres', link: '/recruteur/offres', current: false },
+  { name: 'Interessés', link: '/recruteur/interesse', current: false },
+  { name: 'Mon Compte', link: '/recruteur/compte', current: false },
+  { name: 'Mon entreprise', link: '/recruteur/entreprise', current: false },
 ]
+
+const navigationJobSeeker = [
+  { name: 'Accueil', link: '/candidat', current: true},
+  { name: 'Offres', link: '#', current: false },
+  { name: 'Mon Compte', link: '#', current: false },]
+
 const userNavigation = [
-  { name: 'Déconnection', href: '/' },
-  { name: 'Supprimer le compte', href: '#' },
+  { name: 'Déconnection' },
+  { name: 'Supprimer le compte' },
 ]
 
 function classNames(classes:any[]) {
@@ -34,7 +42,23 @@ interface TemplateProps {
   }
   
 export const Template: React.FC<TemplateProps> = ({ children }) => {
-  const [isDestroyCardVisible, setIsDestroyCardVisible] = useState(true);
+  const [destroyCardVisible, setDestroyCardVisible] = useState(false);
+  const [navigation, setNavigation] = useState(navigationEmployer);
+  const router = useRouter();
+  const pathname = usePathname()
+  const searchParams = useSearchParams()
+
+  useEffect(() => {
+    const url = `${pathname}?${searchParams}`
+    console.log(url)
+    console.log(pathname)
+    if (pathname === '/accueil/recruteur') {
+      setNavigation(navigationEmployer);
+    }
+    else if (pathname === '/accueil/candidat') {
+      setNavigation(navigationJobSeeker);
+    }
+  }, [pathname, searchParams])
     return (
     <>
     {/*
@@ -63,7 +87,7 @@ export const Template: React.FC<TemplateProps> = ({ children }) => {
                       {navigation.map((item) => (
                         <a
                           key={item.name}
-                          href={item.href}
+                          onClick={() => {router.push('/accueil/' + item.link + '?email=' + searchParams.get('email'))}}
                           className={classNames([
                             item.current
                               ? 'bg-gray-900 text-white'
@@ -112,7 +136,10 @@ export const Template: React.FC<TemplateProps> = ({ children }) => {
                             <Menu.Item key={item.name}>
                               {({ active }) => (
                                 <a
-                                  href={item.href}
+                                onClick={() => { if (item.name === 'Supprimer le compte') {
+                                  setDestroyCardVisible(true);
+                                }
+                              else router.push('/')}}
                                   className={classNames([
                                     active ? 'bg-gray-100' : '',
                                     'block px-4 py-2 text-sm text-gray-700']
@@ -149,7 +176,7 @@ export const Template: React.FC<TemplateProps> = ({ children }) => {
                   <Disclosure.Button
                     key={item.name}
                     as="a"
-                    href={item.href}
+                    onClick={() => {if (!item.current) router.push(('/accueil/' + item.link + '?email=' + searchParams.get('email')))}}
                     className={classNames([
                       item.current ? 'bg-gray-900 text-white' : 'text-gray-300 hover:bg-gray-700 hover:text-white',
                       'block rounded-md px-3 py-2 text-base font-medium']
@@ -181,10 +208,15 @@ export const Template: React.FC<TemplateProps> = ({ children }) => {
                 <div className="mt-3 space-y-1 px-2">
                   {userNavigation.map((item) => (
                     <Disclosure.Button
-                      key={item.name}
-                      as="a"
-                      href={item.href}
-                      className="block rounded-md px-3 py-2 text-base font-medium text-gray-400 hover:bg-gray-700 hover:text-white"
+                    onClick={() => { if (item.name === 'Supprimer le compte') {
+                      setDestroyCardVisible(true);
+                    }
+                  else router.push('/')}}
+                      
+                    key={item.name}
+                    as="a"
+                    className="block rounded-md px-3 py-2 text-base font-medium text-gray-400 hover:bg-gray-700 hover:text-white"
+                      
                     >
                       {item.name}
                     </Disclosure.Button>
@@ -204,8 +236,8 @@ export const Template: React.FC<TemplateProps> = ({ children }) => {
       <main>
         <div className="mx-auto max-w-7xl py-6 sm:px-6 lg:px-8">
           {
-            isDestroyCardVisible &&
-            <DestroyCard onClose={() => setIsDestroyCardVisible(false)}/>
+            destroyCardVisible &&
+            <DestroyCard onClose={() => setDestroyCardVisible(false)}/>
           }
           {children}
         </div>

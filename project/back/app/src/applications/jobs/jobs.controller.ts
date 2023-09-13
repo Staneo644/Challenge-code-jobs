@@ -8,9 +8,7 @@ export class JobsController {
 
     @Post(':employerId/jobs/:jobId')
     createJob(@Param('employerId') employerId: string, @Body() jobData: any) {
-
       return this.jobsService.createJob(jobData);
-      
     }
   
     @Put(':employerId/jobs/:jobId')

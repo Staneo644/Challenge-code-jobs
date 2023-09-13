@@ -33,7 +33,7 @@ export class EnterprisesDomain {
   }
 
   async isEnterprise(title: string): Promise<boolean> {
-    const enterprise = await this.enterpriseService.getEnterpriseByTitle(title);
+    const enterprise = await this.getEnterpriseByTitle(title);
     if (!enterprise) {
         return false;
       }
@@ -47,9 +47,10 @@ export class EnterprisesDomain {
   }
 
   async deleteEnterprise(email: string): Promise<void> {
-    const title = this.enterpriseService.getEnterpriseByTitle(email)
-    if (title) {
-        this.enterpriseService.deleteEnterprise(email);
+    const listEnterprises = await this.enterpriseService.getEnterprisesByEmail(email);
+    console.log(listEnterprises);
+    for (const enterprise of listEnterprises) {
+      this.deleteEnterpriseTitle(enterprise.title);
     }
   }
 }

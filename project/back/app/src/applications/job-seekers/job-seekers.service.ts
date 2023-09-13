@@ -23,7 +23,7 @@ export class JobSeekersService {
     return JobSeekerModel.findOneAndUpdate({email}, jobSeekerData, { new: true }).exec();
   }
 
-  async removeJobSeeker(email: string): Promise<void> {
-    await JobSeekerModel.findOneAndRemove({email}).exec();
+  async removeJobSeeker(email: string){
+    return await JobSeekerModel.findOneAndRemove({email}).exec();
   }
 }

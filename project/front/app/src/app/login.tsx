@@ -1,7 +1,7 @@
 import { useState } from "react";
 import Link from "next/link";
-import {getEmployer} from "./communication/employer";
-import { EmployerData, userExist } from "./communication/global";
+import { userParam } from "./communication/user";
+import { userEnum } from "./communication/global";
 import { useRouter } from "next/navigation";
 
 export default function Login () {
@@ -12,9 +12,12 @@ export default function Login () {
 
   const connect = (event:any) => {
     event.preventDefault();
-    userExist(email).then((data) => {
+    userParam(email).then((data) => {
       console.log(data)
-      if (data === true) {
+      if (data === userEnum.isEmployer) {
+        router.push('/accueil/recrutement?email='+email)
+      }
+      else if (data === userEnum.isJobSeeker) {
         router.push('/accueil/recherche-de-jobs?email='+email)
       }
       else

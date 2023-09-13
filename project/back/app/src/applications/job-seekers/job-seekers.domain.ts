@@ -35,8 +35,8 @@ export class JobSeekersDomain {
         return true;
     }
   
-    async deleteJobSeeker(email: string): Promise<void> {
-      const deletedJobSeeker = await this.jobSeekerService.removeJobSeeker(email); 
+    async deleteJobSeeker(email: string) {
+      return await this.jobSeekerService.removeJobSeeker(email); 
     }
   
     async getJobSeeker(email: string): Promise<JobSeeker | null> {
