@@ -1,5 +1,5 @@
 import { Controller, Delete } from '@nestjs/common';
-import { EnterprisesDomain } from './enterprises.domain.service';
+import { EnterprisesDomain } from './enterprises.domain';
 import { Enterprise } from '../../core/enterprises/enterprise.entity';
 import { Body, Get, Param, Patch, Post, Options, Res } from '@nestjs/common';
 import { UsePipes, ValidationPipe } from '@nestjs/common';

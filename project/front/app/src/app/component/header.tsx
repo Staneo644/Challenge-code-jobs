@@ -3,6 +3,8 @@ import { Disclosure, Menu, Transition } from '@headlessui/react'
 import { Bars3Icon, BellIcon, XMarkIcon } from '@heroicons/react/24/outline'
 import { ReactNode } from 'react'
 import '../globals.css'
+import DestroyCard from './card'
+import { useState } from 'react'
 
 const user = {
   name: 'Tom Cook',
@@ -11,16 +13,15 @@ const user = {
     'https://s2.qwant.com/thumbr/0x380/e/d/de00606904e6cfffb72b93625574e7f6d55c8b345140aea0c94ae4e4e727c0/vector-sign-of-user-icon.jpg?u=https%3A%2F%2Fstatic.vecteezy.com%2Fsystem%2Fresources%2Fpreviews%2F000%2F574%2F512%2Foriginal%2Fvector-sign-of-user-icon.jpg&q=0&b=1&p=0&a=0',
 }
 const navigation = [
-  { name: 'Dashboard', href: '#', current: true },
+  { name: 'Dashddddboard', href: '#', current: true },
   { name: 'Team', href: '#', current: false },
   { name: 'Projects', href: '#', current: false },
   { name: 'Calendar', href: '#', current: false },
   { name: 'Reports', href: '#', current: false },
 ]
 const userNavigation = [
-  { name: 'Your Profile', href: '#' },
-  { name: 'Settings', href: '#' },
-  { name: 'Sign out', href: '/' },
+  { name: 'Déconnection', href: '/' },
+  { name: 'Supprimer le compte', href: '#' },
 ]
 
 function classNames(classes:any[]) {
@@ -33,6 +34,7 @@ interface TemplateProps {
   }
   
 export const Template: React.FC<TemplateProps> = ({ children }) => {
+  const [isDestroyCardVisible, setIsDestroyCardVisible] = useState(true);
     return (
     <>
     {/*
@@ -52,7 +54,7 @@ export const Template: React.FC<TemplateProps> = ({ children }) => {
                   <div className="flex-shrink-0">
                     <img
                       className="h-8 w-8"
-                      src="https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=500"
+                      src="../logo.png"
                       alt="Your Company"
                     />
                   </div>
@@ -200,7 +202,13 @@ export const Template: React.FC<TemplateProps> = ({ children }) => {
         </div>
       </header>
       <main>
-        <div className="mx-auto max-w-7xl py-6 sm:px-6 lg:px-8">{children}</div>
+        <div className="mx-auto max-w-7xl py-6 sm:px-6 lg:px-8">
+          {
+            isDestroyCardVisible &&
+            <DestroyCard onClose={() => setIsDestroyCardVisible(false)}/>
+          }
+          {children}
+        </div>
       </main>
     </div>
   </>

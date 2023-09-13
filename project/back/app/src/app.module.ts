@@ -8,8 +8,10 @@ import { EmployersModule } from './applications/employers/employers.module';
 import { JobsModule } from './applications/jobs/jobs.module';
 import { EnterprisesModule } from './applications/enterprises/enterprises.module';
 import { JobSeekersModule } from './applications/job-seekers/job-seekers.module';
+import { UsersModule } from './applications/users/users.module';
+
 @Module({
-  imports: [DatabaseModule, EmployersModule, JobsModule, EnterprisesModule, JobSeekersModule],
+  imports: [DatabaseModule, EmployersModule, JobsModule, EnterprisesModule, JobSeekersModule, UsersModule],
   controllers: [AppController],
   providers: [AppService],
 })

@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { Employer } from '../../core/employers/employer.entity';
 import { EmployersService } from './employers.service';
-import { EnterprisesDomain } from '../enterprises/enterprises.domain.service';
+import { EnterprisesDomain } from '../enterprises/enterprises.domain';
 import { EnterprisesService } from '../enterprises/enterprises.service';
 import { IEmployersDomain } from '../../core/employers/employer.interfaces';
 

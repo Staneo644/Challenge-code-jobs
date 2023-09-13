@@ -5,7 +5,7 @@ import { EmployersController } from './employers.controller';
 import { EmployersService } from './employers.service';
 import { EmployerSchema } from '../../core/employers/employer.entity';
 import { JobsService } from '../jobs/jobs.service';
-import { EmployersDomain } from './employers.domain.service';
+import { EmployersDomain } from './employers.domain';
 
 
 @Module({

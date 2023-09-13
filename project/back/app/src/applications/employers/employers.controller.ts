@@ -2,24 +2,14 @@ import { Controller, Post, Put, Delete, Param, Body, Get, Res, Options, UsePipes
 import { IsNotEmpty } from 'class-validator';
 import { Employer } from 'src/core/employers/employer.entity';
 import { Response } from 'express';
-import { EmployersDomain } from './employers.domain.service';
+import { EmployersDomain } from './employers.domain';
+import { JobSeeker } from 'src/core/job-seekers/job-seeker.entity';
 
 interface EmployerData {
   surname: string;
   name: string;
   email: string;
   // Ajoutez d'autres propriétés si nécessaire
-}
-
-export class createEmployer {
-  @IsNotEmpty({ message: 'email is required' })
-  email: string;
-  @IsNotEmpty({ message: 'surname is required' })
-  surname: string;
-  @IsNotEmpty({ message: 'name is required' })
-  name: string;
-  @IsNotEmpty({ message: 'enterprise_id is required' })
-  enterprise_id: number;
 }
 
 @Controller('employers')
