@@ -1,24 +1,28 @@
 import { Controller } from '@nestjs/common';
-import { Post, Put, Delete, Param, Body } from '@nestjs/common';
-import { JobsService } from './jobs.service';
+import { Post, Put, Delete, Param, Body, Get } from '@nestjs/common';
+import { JobsDomain } from './jobs.domain';
+import * as mongoose from 'mongoose';
+import { Job } from 'src/core/jobs/job.entity';
 
 @Controller('jobs')
 export class JobsController {
-    constructor(private readonly jobsService: JobsService) {}
+    constructor(private readonly jobsService: JobsDomain) {}
 
-    @Post(':employerId/jobs/:jobId')
-    createJob(@Param('employerId') employerId: string, @Body() jobData: any) {
-      return this.jobsService.createJob(jobData);
-    }
-  
-    @Put(':employerId/jobs/:jobId')
-    updateJob(@Param('employerId') employerId: string, @Param('jobId') jobId: string, @Body() jobData: any) {
-      return this.jobsService.updateJob(employerId, jobId, jobData);
-    }
-  
-    @Delete(':employerId/jobs/:jobId')
-    deleteJob(@Param('employerId') employerId: string, @Param('jobId') jobId: string) {
-      return this.jobsService.deleteJob(employerId, jobId);
+    @Get()
+    findAllJobs() {
+      console.log('GET request received for all jobs')
+      return this.jobsService.findAllJobs();
     }
 
+    @Get(':jobId')
+    findJobById( @Param('jobId') jobId: mongoose.Types.ObjectId) {
+      console.log('GET request received for job ', jobId)
+      return this.jobsService.findJobById(jobId);
+    }
+  
+    @Put(':jobId')
+    updateJob( @Param('jobId') jobId: mongoose.Types.ObjectId, @Body() jobData: Job) {
+      console.log('PUT request received for job ', jobId)
+      return this.jobsService.updateJob(jobId, jobData);
+    }
 }

@@ -2,39 +2,29 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { Job, JobModel } from '../../core/jobs/job.entity'; // Importez votre entité Job définie dans le core
 import { JobsModule } from './jobs.module';
 import { IJobsService } from 'src/core/jobs/job.interfaces';
+import { ObjectId } from 'mongoose';
+import * as mongoose from 'mongoose';
 
 @Injectable()
 export class JobsService implements IJobsService {
 
 
-  async createJob( jobData: any): Promise<Job> {
-    // Créez une nouvelle instance de Job avec les données fournies
+  async createJob( jobData: Job): Promise<Job> {
     const job = new JobModel(jobData);
     return await job.save();
   }
 
-  async updateJob(employerId: string, jobId: string, jobData: JobsModule): Promise<Job> {
+  async updateJob( jobId: mongoose.Types.ObjectId, jobData: Job): Promise<Job> {
     const job = await this.findJobById(jobId);
-
-    if (job.employer_id.toString() !== employerId) {
-      throw new NotFoundException('Job not found for the specified employer.');
-    }
-
     Object.assign(job, jobData);
     return await job.save();
   }
 
-  async deleteJob(employerId: string, jobId: string): Promise<void> {
-    const job = await this.findJobById(jobId);
-
-    if (job.employer_id.toString() !== employerId) {
-        throw new NotFoundException('Job not found for the specified employer.');
-    }
-
+  async deleteJob(jobId: mongoose.Types.ObjectId): Promise<void> {
     await JobModel.deleteOne({ _id: jobId }).exec();
     }
 
-  async findJobById(jobId: string): Promise<Job> {
+  async findJobById(jobId: mongoose.Types.ObjectId): Promise<Job> {
     try {
       return await JobModel.findById(jobId).exec();
     } catch (error) {
@@ -49,5 +39,4 @@ export class JobsService implements IJobsService {
   async getEmployerJobs(employerId: string): Promise<Job[]> {
     return await JobModel.find({ employer_id: employerId }).exec();
   }
-
 }

@@ -6,7 +6,11 @@ export interface Job extends Document {
   status: 'actif' | 'expire' | 'a venir';
   description: string;
   domain: string;
-  employer_id: Types.ObjectId;
+  employer_email: string;
+  enterprise_name: string;
+  name: string;
+  image: string;
+  date: string;
 }
 
 export const JobSchema = new Schema<Job>({
@@ -14,7 +18,11 @@ export const JobSchema = new Schema<Job>({
   status: { type: String, enum: ['actif', 'expire', 'a venir'], required: true },
   description: { type: String, required: true },
   domain: { type: String, required: true },
-  employer_id: { type: Schema.Types.ObjectId, ref: 'Employer', required: true }
+  employer_email: { type: String, required: true },
+  enterprise_name: { type: String, required: true },
+  name: { type: String, required: true },
+  image: { type: String, required: true },
+  date: { type: String, required: true },
 });
 
 export const JobModel = mongoose.model<Job>('Job', JobSchema);

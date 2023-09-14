@@ -15,10 +15,10 @@ export default function Login () {
     userParam(email).then((data) => {
       console.log(data)
       if (data === userEnum.isEmployer) {
-        router.push('/accueil/recrutement?email='+email)
+        router.push('/accueil/recruteur?email='+email)
       }
       else if (data === userEnum.isJobSeeker) {
-        router.push('/accueil/recherche-de-jobs?email='+email)
+        router.push('/accueil/candidat?email='+email)
       }
       else
         setUnValidEmail(true)

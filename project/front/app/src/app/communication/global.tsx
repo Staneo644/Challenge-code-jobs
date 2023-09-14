@@ -34,3 +34,15 @@ export interface jobSeekerData {
     name: string;
 }
 
+export interface jobData {
+    employer_email: string;
+    money: number;
+    status: string;
+    description: string;
+    enterprise_name: string;
+    name: string;
+    image: string;
+    date: string;
+    ID: string;
+}
+

@@ -8,12 +8,8 @@ import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { useEffect } from 'react'
 import { usePathname, useSearchParams } from 'next/navigation'
-const user = {
-  name: 'Tom Cook',
-  email: 'tom@example.com',
-  imageUrl:
-    'https://s2.qwant.com/thumbr/0x380/e/d/de00606904e6cfffb72b93625574e7f6d55c8b345140aea0c94ae4e4e727c0/vector-sign-of-user-icon.jpg?u=https%3A%2F%2Fstatic.vecteezy.com%2Fsystem%2Fresources%2Fpreviews%2F000%2F574%2F512%2Foriginal%2Fvector-sign-of-user-icon.jpg&q=0&b=1&p=0&a=0',
-}
+
+const imageProfil = 'https://s2.qwant.com/thumbr/0x380/e/d/de00606904e6cfffb72b93625574e7f6d55c8b345140aea0c94ae4e4e727c0/vector-sign-of-user-icon.jpg?u=https%3A%2F%2Fstatic.vecteezy.com%2Fsystem%2Fresources%2Fpreviews%2F000%2F574%2F512%2Foriginal%2Fvector-sign-of-user-icon.jpg&q=0&b=1&p=0&a=0'
 const navigationEmployer = [
   { name: 'Accueil', link: '/recruteur', current: true },
   { name: 'Mes offres', link: '/recruteur/offres', current: false },
@@ -43,6 +39,7 @@ interface TemplateProps {
   
 export const Template: React.FC<TemplateProps> = ({ children }) => {
   const [destroyCardVisible, setDestroyCardVisible] = useState(false);
+  const [email, setEmail] = useState<string | null>();
   const [navigation, setNavigation] = useState(navigationEmployer);
   const router = useRouter();
   const pathname = usePathname()
@@ -52,6 +49,7 @@ export const Template: React.FC<TemplateProps> = ({ children }) => {
     const url = `${pathname}?${searchParams}`
     console.log(url)
     console.log(pathname)
+    setEmail(searchParams.get('email'));
     if (pathname === '/accueil/recruteur') {
       setNavigation(navigationEmployer);
     }
@@ -78,8 +76,8 @@ export const Template: React.FC<TemplateProps> = ({ children }) => {
                   <div className="flex-shrink-0">
                     <img
                       className="h-8 w-8"
-                      src="../logo.png"
-                      alt="Your Company"
+                      src="/logo.png"
+                      alt="logo"
                     />
                   </div>
                   <div className="hidden md:block">
@@ -119,7 +117,7 @@ export const Template: React.FC<TemplateProps> = ({ children }) => {
                         <Menu.Button className="relative flex max-w-xs items-center rounded-full bg-gray-800 text-sm focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800">
                           <span className="absolute -inset-1.5" />
                           <span className="sr-only">Open user menu</span>
-                          <img className="h-8 w-8 rounded-full" src={user.imageUrl} alt="" />
+                          <img className="h-8 w-8 rounded-full" src={imageProfil} alt="" />
                         </Menu.Button>
                       </div>
                       <Transition
@@ -190,11 +188,10 @@ export const Template: React.FC<TemplateProps> = ({ children }) => {
               <div className="border-t border-gray-700 pb-3 pt-4">
                 <div className="flex items-center px-5">
                   <div className="flex-shrink-0">
-                    <img className="h-10 w-10 rounded-full" src={user.imageUrl} alt="" />
+                    <img className="h-10 w-10 rounded-full" src={imageProfil} alt="" />
                   </div>
                   <div className="ml-3">
-                    <div className="text-base font-medium leading-none text-white">{user.name}</div>
-                    <div className="text-sm font-medium leading-none text-gray-400">{user.email}</div>
+                    <div className="text-base font-medium leading-none text-white">{email}</div>
                   </div>
                   <button
                     type="button"

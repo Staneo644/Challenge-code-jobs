@@ -4,6 +4,9 @@ import { EmployersService } from './employers.service';
 import { EnterprisesDomain } from '../enterprises/enterprises.domain';
 import { EnterprisesService } from '../enterprises/enterprises.service';
 import { IEmployersDomain } from '../../core/employers/employer.interfaces';
+import { Job } from 'src/core/jobs/job.entity';
+import { JobsDomain } from '../jobs/jobs.domain';
+import * as mongoose from 'mongoose';
 
 @Injectable()
 export class EmployersDomain implements IEmployersDomain {
@@ -11,6 +14,7 @@ export class EmployersDomain implements IEmployersDomain {
   constructor (
     private readonly employerService: EmployersService, 
     private readonly enterprisesDomain: EnterprisesDomain){}
+    private readonly jobsDomain: JobsDomain;
     
 
     async createEmployer(employerData: Employer): Promise<Employer> {
@@ -54,5 +58,36 @@ export class EmployersDomain implements IEmployersDomain {
       return this.employerService.getEmployer(email);
     }
 
+    async getEmployerJobs(email: string): Promise<Job[]> {
+      const ret = await this.getEmployer(email);
+      if (!ret) {
+        return null;
+      }
+      
+      return this.jobsDomain.getJobsById(ret.jobs);
+    }
+
+    async addJobToEmployer(email: string, jobData: Job): Promise<Employer> {
+      const ret = await this.getEmployer(email);
+      if (!ret) {
+        return null;
+      }
+      const jobId = await this.jobsDomain.createJob(jobData);
+      ret.jobs.push(jobId._id);
+      return this.employerService.updateEmployer(email, ret);
+    }
+
+    async deleteJobFromEmployer(email: string, jobId: mongoose.Types.ObjectId): Promise<Employer> {
+      const ret = await this.getEmployer(email);
+      if (!ret) {
+        return null;
+      }
+      const index = ret.jobs.indexOf(jobId);
+      if (index > -1) {
+        ret.jobs.splice(index, 1);
+      }
+      this.jobsDomain.deleteJob(jobId);
+      return this.employerService.updateEmployer(email, ret);
+    }
     
   }

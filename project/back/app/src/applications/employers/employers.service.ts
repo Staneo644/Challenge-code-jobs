@@ -6,8 +6,6 @@ import { EmployerModel } from '../../core/employers/employer.entity';
 
 @Injectable()
 export class EmployersService implements IEmployersService {
-    constructor(private readonly jobsService: JobsService) {}
-  
     
 
     async createEmployer(employerData: Employer): Promise<Employer> {
