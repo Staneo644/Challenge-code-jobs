@@ -8,11 +8,12 @@ import { JobsService } from '../jobs/jobs.service';
 import { EmployersDomain } from './employers.domain';
 import { EnterprisesService } from '../enterprises/enterprises.service';
 import { EnterprisesDomain } from '../enterprises/enterprises.domain';
+import { JobsDomain } from '../jobs/jobs.domain';
 
 
 @Module({
   imports: [MongooseModule.forFeature([{ name: 'Employer', schema: EmployerSchema }])],
   controllers: [EmployersController],
-  providers: [EmployersService, JobsService, EmployersDomain, EnterprisesService, EnterprisesDomain],
+  providers: [EmployersService, EmployersDomain, EnterprisesService, EnterprisesDomain,JobsDomain, JobsService],
 })
 export class EmployersModule {}

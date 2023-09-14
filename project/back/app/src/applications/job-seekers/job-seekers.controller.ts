@@ -8,16 +8,6 @@ export class JobSeekersController {
   constructor(private readonly jobSeekersService: JobSeekersDomain) {}
 
 
-  @Options()
-  handleOptions(@Res() res: Response) {
-    console.log('OPTIONS request received for jobSeekers');
-    res.header('Access-Control-Allow-Origin', 'http://localhost:8080');
-    res.header('Access-Control-Allow-Methods', 'GET,HEAD,PUT,PATCH,POST,DELETE');
-    res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization');
-    res.header('Access-Control-Allow-Credentials', 'true');
-    res.status(200).send(); // Respond with a 200 OK status for the OPTIONS request.
-  }
-
 
   @Get()
   findAll(): Promise<JobSeeker[]> {

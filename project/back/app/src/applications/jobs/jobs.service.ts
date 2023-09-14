@@ -1,5 +1,5 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { Job, JobModel } from '../../core/jobs/job.entity'; // Importez votre entité Job définie dans le core
+import { Job, JobId, JobModel } from '../../core/jobs/job.entity'; // Importez votre entité Job définie dans le core
 import { JobsModule } from './jobs.module';
 import { IJobsService } from 'src/core/jobs/job.interfaces';
 import { ObjectId } from 'mongoose';
@@ -9,15 +9,13 @@ import * as mongoose from 'mongoose';
 export class JobsService implements IJobsService {
 
 
-  async createJob( jobData: Job): Promise<Job> {
+  async createJob( jobData: Job): Promise<any> {
     const job = new JobModel(jobData);
     return await job.save();
   }
 
-  async updateJob( jobId: mongoose.Types.ObjectId, jobData: Job): Promise<Job> {
-    const job = await this.findJobById(jobId);
-    Object.assign(job, jobData);
-    return await job.save();
+  async updateJob( jobId: mongoose.Types.ObjectId, jobData: Job): Promise<JobId> {
+    return JobModel.findOneAndUpdate({ _id: jobId }, jobData, { new: true })
   }
 
   async deleteJob(jobId: mongoose.Types.ObjectId): Promise<void> {

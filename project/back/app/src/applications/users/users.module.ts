@@ -10,10 +10,11 @@ import { JobSeekersModule } from '../job-seekers/job-seekers.module';
 import { JobsService } from '../jobs/jobs.service';
 import { EnterprisesService } from '../enterprises/enterprises.service';
 import { EnterprisesDomain } from '../enterprises/enterprises.domain';
+import { JobsDomain } from '../jobs/jobs.domain';
 
 
 @Module({
   controllers: [UsersController],
-  providers: [UsersDomain, EmployersDomain, JobSeekersDomain, EmployersService, JobSeekersService, JobsService, EnterprisesService, EnterprisesDomain]
+  providers: [UsersDomain, EmployersDomain, JobSeekersDomain, EmployersService, JobSeekersService, JobsService, EnterprisesService, EnterprisesDomain, JobsDomain, JobsService]
 })
 export class UsersModule {}

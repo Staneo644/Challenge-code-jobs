@@ -11,7 +11,7 @@ import { EnterprisesDomain } from '../enterprises/enterprises.domain';
 import { EnterprisesService } from '../enterprises/enterprises.service';
 
 @Module({
-  providers: [JobsService, JobsDomain, EmployersDomain, EmployersService, EnterprisesDomain, EnterprisesService],
+  providers: [JobsService, JobsDomain],
   controllers: [JobsController]
 })
 export class JobsModule {}

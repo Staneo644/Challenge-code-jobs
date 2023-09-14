@@ -7,17 +7,42 @@ import { usePathname, useSearchParams } from 'next/navigation';
 import '../../../globals.css'
 import { JobListFunction } from './card';
 import { get } from 'http';
-import { getEmployer } from '@/app/communication/employer';
-import { getEmployerJobs } from '@/app/communication/jobs';
-import { jobData } from '@/app/communication/global';
+import { createJob, getEmployerJobs } from '@/app/communication/employer';
+import { jobData, jobDataId } from '@/app/communication/global';
 
 
 export default function Home() {
 
-    const [jobList, setJobList] = useState<jobData[]>([])
+    const [jobList, setJobList] = useState<jobDataId[]>([])
     const pathname = usePathname()
     const searchParams = useSearchParams()  
     const [email, setEmail] = useState('')
+
+    useEffect(() => {
+      if (email === '') {
+        return
+      }
+      createJob(email, {
+        name: "test",
+        employer_email: email,
+        description: "test",
+        money: 12,
+        image: "test",
+        status: "actif",
+        enterprise_name: "test",
+        date: "test",
+      }).then((data) => {
+        console.log(data);
+      });
+    
+      getEmployerJobs(email).then((data) => {
+        console.log(data);
+        setJobList(data ?? []);
+      });
+    
+    
+    }, [email])
+
 
   useEffect(() => {
     const url = `${pathname}?${searchParams}`
@@ -27,16 +52,13 @@ export default function Home() {
       window.location.href = 'http://localhost:8080'
     }
     setEmail(searchParams.get('email') ?? 'null')
-
-    getEmployerJobs(email).then((data) => {
-      console.log(data);
+    console.log(searchParams.get('email') ?? 'null')
     
-      setJobList(data ?? []);
-    });
     
-  }, [pathname, searchParams])
+    
+  }, [pathname, searchParams, email])
 
-  const handleItemClick = (id: number) => {
+  const handleItemClick = (id: string) => {
     console.log(id)
   }
 

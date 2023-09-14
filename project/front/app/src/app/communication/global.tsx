@@ -34,15 +34,19 @@ export interface jobSeekerData {
     name: string;
 }
 
+
 export interface jobData {
     employer_email: string;
     money: number;
-    status: string;
+    status: 'actif' | 'expire' | 'a venir';
     description: string;
     enterprise_name: string;
     name: string;
     image: string;
     date: string;
+}
+
+export interface jobDataId extends jobData {
     ID: string;
 }
 

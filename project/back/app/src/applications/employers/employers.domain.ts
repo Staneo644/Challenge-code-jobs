@@ -4,7 +4,7 @@ import { EmployersService } from './employers.service';
 import { EnterprisesDomain } from '../enterprises/enterprises.domain';
 import { EnterprisesService } from '../enterprises/enterprises.service';
 import { IEmployersDomain } from '../../core/employers/employer.interfaces';
-import { Job } from 'src/core/jobs/job.entity';
+import { Job, JobId } from 'src/core/jobs/job.entity';
 import { JobsDomain } from '../jobs/jobs.domain';
 import * as mongoose from 'mongoose';
 
@@ -13,8 +13,8 @@ export class EmployersDomain implements IEmployersDomain {
 
   constructor (
     private readonly employerService: EmployersService, 
+    private readonly jobsDomain: JobsDomain,
     private readonly enterprisesDomain: EnterprisesDomain){}
-    private readonly jobsDomain: JobsDomain;
     
 
     async createEmployer(employerData: Employer): Promise<Employer> {
@@ -72,7 +72,7 @@ export class EmployersDomain implements IEmployersDomain {
       if (!ret) {
         return null;
       }
-      const jobId = await this.jobsDomain.createJob(jobData);
+      const jobId:JobId = await this.jobsDomain.createJob(jobData);
       ret.jobs.push(jobId._id);
       return this.employerService.updateEmployer(email, ret);
     }
