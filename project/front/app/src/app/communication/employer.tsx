@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { EmployerData, apiUrl, jobData } from './global';
+import { EmployerData, apiUrl, jobData, jobDataId } from './global';
 
 export const getEmployer = async (email:string) => {
   console.log("searching for employer " + email)
@@ -53,7 +53,7 @@ export const getEmployer = async (email:string) => {
   };
   
   // Fonction pour récupérer tous les emplois d'un employeur spécifique
-  export const getEmployerJobs = async (employerEmail:string) => {
+  export const getEmployerJobs = async (employerEmail:string):Promise<jobDataId[]> => {
     console.log("searching for jobs of " + employerEmail)
     try {
       const response = await axios.get(`${apiUrl}/employers/jobs/${employerEmail}`);

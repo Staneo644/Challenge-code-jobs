@@ -10,7 +10,7 @@ export interface jobData {
   enterprise_name: string;
   name: string;
   image: string;
-  date: string;
+  date: Date;
 }
 
 export class Job {
@@ -37,7 +37,7 @@ export class Job {
   @IsEmail({}, { message: 'email is not valid' })
   employer_email: string;
 
-  @IsNotEmpty({ message: 'enterprise_name is required' })
+
   enterprise_name: string;
 
   @IsNotEmpty({ message: 'name is required' })
@@ -46,8 +46,7 @@ export class Job {
   @IsNotEmpty({ message: 'image is required' })
   image: string;
 
-  @IsNotEmpty({ message: 'date is required' })
-  date: string;
+  date: Date;
 }
 
 export class JobId extends Job {
@@ -59,10 +58,10 @@ export const JobSchema = new Schema<Job>({
   status: { type: String, enum: ['actif', 'expire', 'a venir'], required: true },
   description: { type: String, required: true },
   employer_email: { type: String, required: true },
-  enterprise_name: { type: String, required: true },
+  enterprise_name: { type: String},
   name: { type: String, required: true },
   image: { type: String, required: true },
-  date: { type: String, required: true },
+  date: { type: Date, required: true },
 });
 
 export const JobModel = mongoose.model<Job>('Job', JobSchema);

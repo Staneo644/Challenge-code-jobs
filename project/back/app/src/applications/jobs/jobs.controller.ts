@@ -2,7 +2,7 @@ import { Controller } from '@nestjs/common';
 import { Post, Put, Delete, Param, Body, Get } from '@nestjs/common';
 import { JobsDomain } from './jobs.domain';
 import * as mongoose from 'mongoose';
-import { Job, JobId } from 'src/core/jobs/job.entity';
+import { Job, JobId, jobData } from 'src/core/jobs/job.entity';
 
 @Controller('jobs')
 export class JobsController {
@@ -21,7 +21,7 @@ export class JobsController {
     }
   
     @Put(':jobId')
-    updateJob( @Param('jobId') jobId: mongoose.Types.ObjectId, @Body() jobData: JobId) {
+    updateJob( @Param('jobId') jobId: mongoose.Types.ObjectId, @Body() jobData: jobData) {
       console.log('PUT request received for job ', jobId)
       return this.jobsService.updateJob(jobId, jobData);
     }

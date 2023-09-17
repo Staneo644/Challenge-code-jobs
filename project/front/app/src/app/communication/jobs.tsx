@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { apiUrl, jobData } from './global';
+import { apiUrl, jobData, jobDataId } from './global';
 
 export const findAllJobs = async (): Promise<jobData[]> => {
   console.log("searching for all jobs")
@@ -16,11 +16,11 @@ export const findAllJobs = async (): Promise<jobData[]> => {
   // Fonction pour créer un emploi
   
   // Fonction pour mettre à jour un emploi
-  export const updateJob = async (employerEmail:string, jobId:string, jobData:jobData) => {
-    console.log("updating job " + jobId + " for " + employerEmail)
+  export const updateJob = async (jobId:string, jobData:jobData) => {
+    console.log("updating job " + jobId)
     try {
-      const response = await axios.put(`${apiUrl}/${employerEmail}/jobs/${jobId}`, jobData);
-      console.log("updated job " + jobId + " for " + employerEmail + " : " + response.data)
+      const response = await axios.put(`${apiUrl}/jobs/${jobId}`, jobData);
+      console.log("updated job " + jobId +  " : " + response.data)
       return response.data;
     } catch (error) {
       console.error('Erreur lors de la mise à jour de l\'emploi', error);

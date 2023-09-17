@@ -2,14 +2,22 @@
 
 import React from 'react';
 import {Template} from '@/app/component/header';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useContext } from 'react';
 import { usePathname, useSearchParams } from 'next/navigation';
 import '../../../globals.css'
 import { JobListFunction } from './card';
 import { get } from 'http';
 import { createJob, getEmployerJobs } from '@/app/communication/employer';
 import { jobData, jobDataId } from '@/app/communication/global';
+import { createContext } from 'react';
 
+interface createJobsProps {
+  data: jobDataId[];
+  reload: () => void;
+  email:string;
+}
+
+export const MyContext = createContext<createJobsProps>({} as createJobsProps);
 
 export default function Home() {
 
@@ -17,59 +25,59 @@ export default function Home() {
     const pathname = usePathname()
     const searchParams = useSearchParams()  
     const [email, setEmail] = useState('')
+    
+    
+    const getJobsList = ():void => {
+      getEmployerJobs(email).then((data) => {
+        console.log(data);
+        setJobList(data ?? []);
+        
+      });
+    }
+
 
     useEffect(() => {
       if (email === '') {
         return
       }
-      createJob(email, {
-        name: "test",
-        employer_email: email,
-        description: "test",
-        money: 12,
-        image: "test",
-        status: "actif",
-        enterprise_name: "test",
-        date: "test",
-      }).then((data) => {
-        console.log(data);
-      });
-    
-      getEmployerJobs(email).then((data) => {
-        console.log(data);
-        setJobList(data ?? []);
-      });
-    
-    
+      
+      getJobsList()
+      
     }, [email])
-
-
-  useEffect(() => {
-    const url = `${pathname}?${searchParams}`
-    console.log(url)
-    console.log(searchParams.get('email'))
-    if (searchParams.get('email') === null) {
-      window.location.href = 'http://localhost:8080'
-    }
-    setEmail(searchParams.get('email') ?? 'null')
-    console.log(searchParams.get('email') ?? 'null')
     
     
+    useEffect(() => {
+      const url = `${pathname}?${searchParams}`
+      console.log(url)
+      console.log(searchParams.get('email'))
+      if (searchParams.get('email') === null) {
+        window.location.href = 'http://localhost:8080'
+      }
+      setEmail(searchParams.get('email') ?? 'null')
+      console.log(searchParams.get('email') ?? 'null')
+      
+      
+      
+    }, [pathname, searchParams])
     
-  }, [pathname, searchParams, email])
-
-  const handleItemClick = (id: string) => {
-    console.log(id)
-  }
-
+ 
     return(
-        <main className="absolute h-full w-full bg-gray-100">
-        <Template>
+      <div className='h-full w-full bg-gray-100'>
 
-        {email !== '' && JobListFunction({jobOffers:jobList, handleItemClick:handleItemClick})}
-        
+        <main className="flex flex-col h-screen">
+        <Template>
+        <MyContext.Provider value={{
+          data: jobList,
+          reload: getJobsList,
+          email: email
+
+        }}>
+        {email !== '' && <JobListFunction/> }
+        </MyContext.Provider>
         </Template>
+        
       </main>
+      </div>
   
     )
   }

@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { Job, JobId, JobModel } from '../../core/jobs/job.entity';
+import { Job, JobId, JobModel, jobData } from '../../core/jobs/job.entity';
 import { JobsService } from './jobs.service';
 import * as mongoose from 'mongoose';
 
@@ -11,14 +11,21 @@ export class JobsDomain {
 
 
   async createJob( jobData: Job): Promise<any> {
+    jobData.date = new Date();
+
     return await this.jobsService.createJob(jobData);
   }
 
-  async updateJob(jobId: mongoose.Types.ObjectId, jobData: JobId): Promise<Job> {
-    const ret = await this.findJobById(jobData._id);
+  async updateJob(jobId: mongoose.Types.ObjectId, jobData: jobData): Promise<Job> {
+    let ret = await this.findJobById(jobId);
     if (!ret) {
         return null;
     }
+    ret.description = jobData.description;
+    ret.name = jobData.name;
+    ret.image = jobData.image;
+    ret.money = jobData.money;
+    ret.status = jobData.status;
     this.jobsService.updateJob(jobId, jobData);
   }
 

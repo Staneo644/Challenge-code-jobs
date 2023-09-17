@@ -3,7 +3,7 @@ import { Disclosure, Menu, Transition } from '@headlessui/react'
 import { Bars3Icon, BellIcon, XMarkIcon } from '@heroicons/react/24/outline'
 import { ReactNode } from 'react'
 import '../globals.css'
-import DestroyCard from './card'
+import DestroyCard from './headerDeleteCard'
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { useEffect } from 'react'
@@ -67,7 +67,7 @@ export const Template: React.FC<TemplateProps> = ({ children }) => {
       ```
     */}
     <div className="min-h-full">
-      <Disclosure as="nav" className="bg-gray-800">
+      <Disclosure as="nav" className="bg-gray-800 static">
         {({ open }) => (
           <>
             <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
@@ -225,7 +225,7 @@ export const Template: React.FC<TemplateProps> = ({ children }) => {
         )}
       </Disclosure>
 
-      <header className="bg-white shadow">
+      <header className="bg-white shadow static">
         <div className="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
           <h1 className="text-3xl font-bold tracking-tight text-gray-900">Dashboard</h1>
         </div>

@@ -35,18 +35,21 @@ export interface jobSeekerData {
 }
 
 
-export interface jobData {
+export interface statusJob{
+    status: 'actif' | 'expire' | 'a venir';
+}
+
+export interface jobData extends statusJob{
     employer_email: string;
     money: number;
-    status: 'actif' | 'expire' | 'a venir';
     description: string;
-    enterprise_name: string;
     name: string;
     image: string;
-    date: string;
 }
 
 export interface jobDataId extends jobData {
-    ID: string;
+    enterprise_name: string;
+    date: Date;
+    _id: string;
 }
 
