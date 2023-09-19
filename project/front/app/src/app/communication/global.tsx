@@ -48,7 +48,7 @@ export interface jobData extends statusJob{
     description: string;
     name: string;
     imageType: string;
-    imageBuffer: Buffer;
+    imageBuffer: string;
 }
 
 export interface jobDataId extends jobData {

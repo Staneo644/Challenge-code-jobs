@@ -11,7 +11,7 @@ export interface jobData {
   enterprise_name: string;
   name: string;
   imageType: string;
-  imageBuffer: Buffer;
+  imageBuffer: string;
   date: Date;
 }
 
@@ -50,7 +50,7 @@ export class Job {
   imageType: string;
 
   @IsNotEmpty({ message: 'buffer is required' })
-  imageBuffer: Buffer;
+  imageBuffer: string;
 
   date: Date;
 }
@@ -67,7 +67,7 @@ export const JobSchema = new Schema<Job>({
   enterprise_name: { type: String},
   name: { type: String, required: true },
   imageType: { type: String, required: true },
-  imageBuffer: { type: Buffer, required: true },
+  imageBuffer: { type: String, required: true },
   date: { type: Date, required: true },
 });
 

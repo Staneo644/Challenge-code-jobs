@@ -8,6 +8,7 @@ import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { useEffect } from 'react'
 import { usePathname, useSearchParams } from 'next/navigation'
+import { userParam } from '../communication/user'
 
 const imageProfil = 'https://s2.qwant.com/thumbr/0x380/e/d/de00606904e6cfffb72b93625574e7f6d55c8b345140aea0c94ae4e4e727c0/vector-sign-of-user-icon.jpg?u=https%3A%2F%2Fstatic.vecteezy.com%2Fsystem%2Fresources%2Fpreviews%2F000%2F574%2F512%2Foriginal%2Fvector-sign-of-user-icon.jpg&q=0&b=1&p=0&a=0'
 const navigationEmployer = [
@@ -56,6 +57,11 @@ export const Template: React.FC<TemplateProps> = ({ children }) => {
     else if (pathname.startsWith('/accueil/candidat') === true ) {
       setNavigation(navigationJobSeeker);
     }
+    userParam(searchParams.get('email')??'null').then((data) => {
+      if (!(data === 'isEmployer' && navigationEmployer === navigation || data === 'isJobSeeker' && navigationJobSeeker === navigation)) {
+        router.push('/')
+      }
+    });
   }, [pathname, searchParams])
     return (
     <>

@@ -2,6 +2,7 @@ import { NestFactory, Reflector } from '@nestjs/core';
 import { AppModule } from './app.module';
 import * as mongoose from 'mongoose';
 import * as bodyParser from 'body-parser';
+import { ValidationPipe } from '@nestjs/common';
 
 console.log(`Application created, connecting to database ${process.env.DATABASEIP}`);
 async function bootstrap() {
@@ -26,9 +27,8 @@ async function bootstrap() {
 
 
   try {
-    await mongoose.connect('mongodb://db:27017/test', {
- 
-  });
+    await mongoose.connect('mongodb://localhost:27017/test', {});
+
     await app.listen(3000);
     console.log(`Application started and database connected. Listening on port 3000 `);
   } catch (error) {

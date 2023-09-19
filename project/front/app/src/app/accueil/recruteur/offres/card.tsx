@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { use, useContext } from "react";
 import { statusJob, jobDataId } from "@/app/communication/global";
 import { useState } from "react";
 import { MyContext } from "./page";
@@ -6,6 +6,8 @@ import { createContext } from "react";
 import { updateJob } from "@/app/communication/jobs";
 import { createJob } from "@/app/communication/employer";
 import Dropzone from 'react-dropzone';
+import { DropzoneOptions } from 'react-dropzone';
+import { useEffect } from "react";
 
 interface cardJobsProps {
   valueCard: jobDataId | undefined;
@@ -46,21 +48,22 @@ export function JobListFunction  () {
   }
 
   let name:string = valueCard?.name??"titre";
-  let money:number = 0;
-  let description:string = "description";
-  //const [putImage, setPutImage] = useState<File>();
+  let money:number = valueCard?.money??0;
+  let description:string = valueCard?.description??"description";
 
-  const [putImage, setImageBuffer] = useState<Blob>();
-  const [uploadedFile, setUploadedFile] = useState(null);
   const [imageType, setImageType] = useState("");
+  const [imagePreview, setImagePreview] = useState(valueCard?.imageBuffer);
+
+  useEffect(() => {
+    if (valueCard?.imageBuffer !== undefined)
+      setImagePreview(valueCard?.imageBuffer);
+  }, [valueCard]);
 
 
   const [isLoading, setIsLoading] = useState(false);
-  const [imagePreview, setImagePreview] = useState(null);
 
   const handleDrop = (acceptedFiles:any) => {
     const file = acceptedFiles[0];
-    setUploadedFile(file);
     setIsLoading(true);
     setImageType(file.type);
     console.log(file);
@@ -70,7 +73,6 @@ export function JobListFunction  () {
       reader.onload = (e:any) => {
         console.log(e.target.result);
         setImagePreview(e.target.result);
-        setImageBuffer(new Blob([e.target.result], { type: file.type }));
       };
       reader.readAsDataURL(file);
     }, 2000);
@@ -90,19 +92,17 @@ export function JobListFunction  () {
     }
   };
 
+  const dropzoneOptions: DropzoneOptions = {
+    accept: {'image/*': ['.jpg', '.jpeg', '.png']},
+    onDrop: handleDrop,
+  };
+
   const loadButton = () => {
-    if (!uploadedFile || !imagePreview || !putImage) {
+    if (!imagePreview) {
       return;
     }
     if (valueCard===undefined) {
       console.log("name : " + name + "titre");
-      // const formData = new FormData();
-      // formData.append('name', name);
-      // formData.append('employer_email', email);
-      // formData.append('file', uploadedFile);
-      // formData.append('money', money.toString());
-      // formData.append('description', description);
-      // formData.append('status', jobData.status);
       createJob(email, {
         name: name,
         employer_email: email,
@@ -232,7 +232,7 @@ export function JobListFunction  () {
       ></textarea>
       </div>
       <div>
-      <Dropzone onDrop={handleDrop} accept='image/*'>
+      <Dropzone {...dropzoneOptions}>
       {({ getRootProps, getInputProps }) => (
         <div
           {...getRootProps()}
