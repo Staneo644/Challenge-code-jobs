@@ -9,10 +9,13 @@ export enum userEnum {
   };
   
 
-export interface EmployerData {
+export interface UpdatableEmployerData {
     surname: string;
     name: string;
     email: string;
+}
+
+export interface EmployerData extends UpdatableEmployerData {
     enterprise_name: string;
 }
 
@@ -44,7 +47,8 @@ export interface jobData extends statusJob{
     money: number;
     description: string;
     name: string;
-    image: string;
+    imageType: string;
+    imageBuffer: Buffer;
 }
 
 export interface jobDataId extends jobData {

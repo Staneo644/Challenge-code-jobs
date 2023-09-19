@@ -1,6 +1,7 @@
 import { Document, Schema, Types } from 'mongoose';
 import mongoose from 'mongoose';
 import { IsNotEmpty, IsEmail } from 'class-validator';
+import { UseInterceptors } from '@nestjs/common';
 
 export interface jobData {
   employer_email: string;
@@ -9,7 +10,8 @@ export interface jobData {
   description: string;
   enterprise_name: string;
   name: string;
-  image: string;
+  imageType: string;
+  imageBuffer: Buffer;
   date: Date;
 }
 
@@ -22,7 +24,8 @@ export class Job {
     this.employer_email = data.employer_email;
     this.enterprise_name = data.enterprise_name;
     this.name = data.name;
-    this.image = data.image;
+    this.imageType = data.imageType;
+    this.imageBuffer = data.imageBuffer;
     this.date = data.date;
   }
 
@@ -44,7 +47,10 @@ export class Job {
   name: string;
 
   @IsNotEmpty({ message: 'image is required' })
-  image: string;
+  imageType: string;
+
+  @IsNotEmpty({ message: 'buffer is required' })
+  imageBuffer: Buffer;
 
   date: Date;
 }
@@ -60,7 +66,8 @@ export const JobSchema = new Schema<Job>({
   employer_email: { type: String, required: true },
   enterprise_name: { type: String},
   name: { type: String, required: true },
-  image: { type: String, required: true },
+  imageType: { type: String, required: true },
+  imageBuffer: { type: Buffer, required: true },
   date: { type: Date, required: true },
 });
 

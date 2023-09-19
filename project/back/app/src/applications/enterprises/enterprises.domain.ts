@@ -32,6 +32,21 @@ export class EnterprisesDomain {
     return this.enterpriseService.getEnterpriseByTitle(title);
   }
 
+  async getEnterprisesByEmail(email: string): Promise<Enterprise[]> {
+    return this.enterpriseService.getEnterprisesByEmail(email);
+  }
+
+  async updateEnterpriseByEmail(email: string, newEmail:string): Promise<boolean> {
+    const res = await this.getEnterprisesByEmail(email);
+    if (!res) {
+      return false;
+    }
+    for (const enterprise of res) {
+      this.updateEnterprise(enterprise.title,{title:enterprise.title,  email_patron: newEmail});
+    }
+    return true;
+  }
+
   async isEnterprise(title: string): Promise<boolean> {
     const enterprise = await this.getEnterpriseByTitle(title);
     if (!enterprise) {

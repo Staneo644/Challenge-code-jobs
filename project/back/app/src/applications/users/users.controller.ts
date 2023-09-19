@@ -1,5 +1,5 @@
 
-import { Controller, Get, Delete, Param, Options, Res, Post, UsePipes, ValidationPipe, Body } from '@nestjs/common';
+import { Controller, Get, Delete, Param, Options, Res, Post, UsePipes, ValidationPipe, Body, Put } from '@nestjs/common';
 import { Response } from 'express';
 import { UsersDomain } from './users.domain';
 import { Employer } from 'src/core/employers/employer.entity';
@@ -28,6 +28,12 @@ export class UsersController {
     deleteUser(@Param('email') email: string) {
       console.log(`DELETE request received for user: ${email}`);
       return this.usersService.deleteUser(email);
+    }
+
+    @Put(':email')
+    updateUser(@Param('email') email: string, @Body() userJSON: Employer | JobSeeker) {
+      console.log(`PUT request received for user: ${email}`);
+      return this.usersService.updateUser(email, userJSON);
     }
   
     @Get(':email')

@@ -3,15 +3,18 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { DatabaseModule } from './shared/database/database.module';
 import { NestModule, MiddlewareConsumer, RequestMethod } from '@nestjs/common';
-import { CorsMiddleware } from './cors.middleware'; // Créez un middleware CORS personnalisé
+import { CorsMiddleware } from './cors.middleware';
 import { EmployersModule } from './applications/employers/employers.module';
 import { JobsModule } from './applications/jobs/jobs.module';
 import { EnterprisesModule } from './applications/enterprises/enterprises.module';
 import { JobSeekersModule } from './applications/job-seekers/job-seekers.module';
 import { UsersModule } from './applications/users/users.module';
+import { ImageModule } from './applications/image/image.module';
 
 @Module({
-  imports: [DatabaseModule, EmployersModule, JobsModule, EnterprisesModule, JobSeekersModule, UsersModule],
+  imports: [DatabaseModule, EmployersModule, JobsModule, EnterprisesModule, JobSeekersModule, UsersModule,
+    ImageModule,
+  ],
   controllers: [AppController],
   providers: [AppService],
 })

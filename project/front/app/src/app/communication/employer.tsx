@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { EmployerData, apiUrl, jobData, jobDataId } from './global';
+import { EmployerData, apiUrl, jobData, jobDataId, UpdatableEmployerData } from './global';
 
 export const getEmployer = async (email:string) => {
   console.log("searching for employer " + email)
@@ -31,21 +31,24 @@ export const getEmployer = async (email:string) => {
     };
   }
 
-  
-  export const createJob = async (employerEmail:string, jobData:jobData) => {
+  export const createJob = async (employerEmail: string, jobData: jobData) => {
+    //console.log("creating job " + jobData.name + " of " + employerEmail)
     try {
-      fetch(`${apiUrl}/employers/${employerEmail}`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json', // Assurez-vous de spécifier le type de contenu JSON
-        },
-        body: JSON.stringify(jobData),
-
-      })
-
-      //const response = await axios.post(`${apiUrl}/employers/${employerEmail}`, jobData);
-      // console.log("created job for " + employerEmail + " : " + response.data)
-      // return response.data;
+      // const formData = new FormData();
+      // if (image !== undefined) {
+      //   console.log("image ", image)
+      //   formData.append('image', new Blob([image]));
+      //   console.log("blob ", new Blob([image])) 
+      // }
+      // else
+      //   console.log("no image")
+      // formData.append('jobData', JSON.stringify(jobData));
+  
+      const response = await axios.post(`${apiUrl}/employers/${employerEmail}`, jobData
+      );
+  
+      // Handle the response here if needed
+      console.log('Response:', response.data);
     } catch (error) {
       console.error('Erreur lors de la création de l\'emploi', error);
       throw error;

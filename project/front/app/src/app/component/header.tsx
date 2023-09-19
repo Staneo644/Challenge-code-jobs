@@ -20,8 +20,8 @@ const navigationEmployer = [
 
 const navigationJobSeeker = [
   { name: 'Accueil', link: '/candidat', current: true},
-  { name: 'Offres', link: '#', current: false },
-  { name: 'Mon Compte', link: '#', current: false },]
+  { name: 'Offres', link: '/candidat/offres', current: false },
+  { name: 'Mon Compte', link: '/candidat/compte', current: false },]
 
 const userNavigation = [
   { name: 'Déconnection' },
@@ -53,7 +53,7 @@ export const Template: React.FC<TemplateProps> = ({ children }) => {
     if (pathname === '/accueil/recruteur') {
       setNavigation(navigationEmployer);
     }
-    else if (pathname === '/accueil/candidat') {
+    else if (pathname.startsWith('/accueil/candidat') === true ) {
       setNavigation(navigationJobSeeker);
     }
   }, [pathname, searchParams])

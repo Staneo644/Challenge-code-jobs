@@ -4,6 +4,7 @@ import { JobSeekersDomain } from '../job-seekers/job-seekers.domain';
 import { Employer } from 'src/core/employers/employer.entity';
 import { JobSeeker } from 'src/core/job-seekers/job-seeker.entity';
 import { userEnum } from 'src/core/users/user.interfaces';
+import { jobData } from 'src/core/jobs/job.entity';
 
 
 @Injectable()
@@ -31,6 +32,23 @@ export class UsersDomain {
         return res;
     }
 
+    async updateUser(email: string, user: Employer | JobSeeker): Promise<JobSeeker | Employer | null> {
+        const res = await this.checkUser(email);
+        
+        if (user.email !== email) {
+            const res2 = await this.checkUser(user.email);
+            if (res2 !== userEnum.notExist) {
+                return null;
+            }
+        }
+
+        if (res === userEnum.isEmployer) {
+            return this.employersDomain.updateEmployer(email, user);
+        }
+        if (res === userEnum.isJobSeeker) {
+            return this.jobSeekersDomain.updateJobSeeker(email, user);
+        }
+    }
 
    
 

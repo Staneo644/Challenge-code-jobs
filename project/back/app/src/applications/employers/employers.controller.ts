@@ -1,8 +1,15 @@
-import { Controller, Post, Put, Delete, Param, Body, Get, Res, Options, UsePipes, ValidationPipe } from '@nestjs/common';
+import { Controller, Post, Put, Delete, Param, Body, Get, Res, Options,UseInterceptors, UsePipes, ValidationPipe, UploadedFile } from '@nestjs/common';
 import { Response } from 'express';
 import { EmployersDomain } from './employers.domain';
 import { Job, jobData } from 'src/core/jobs/job.entity';
 import * as mongoose from 'mongoose';
+import { diskStorage } from 'multer';
+import { extname } from 'path';
+
+import { MulterModule } from '@nestjs/platform-express/multer';
+
+
+import { FileInterceptor } from '@nestjs/platform-express';
 
 @Controller('employers')
 export class EmployersController {
@@ -15,12 +22,6 @@ export class EmployersController {
     return this.employersService.getEmployers();
   }
   
-  @Put(':employerEmail')
-  updateEmployer(@Param('employerEmail') employerEmail: string, @Body() employerData: any) {
-    console.log(`PUT request received for employer: ${employerEmail} with data: `, employerData);
-    return this.employersService.updateEmployer(employerEmail, employerData);
-  }
-  
   @Get(':employerEmail')
   getEmployer(@Param('employerEmail') employerEmail: string) {
     console.log(`GET request received for employer: ${employerEmail}`);
@@ -30,7 +31,7 @@ export class EmployersController {
   @Post(':employerEmail')
   @UsePipes(ValidationPipe)
   createJob(@Param('employerEmail') employerEmail: string, @Body() jobData: jobData) {
-      console.log('POST request received for job ', jobData)
+      console.log('POST request received for job ', jobData, ' of employer ', employerEmail, ' with image ')
       return this.employersService.addJobToEmployer(employerEmail, jobData);
   }
 

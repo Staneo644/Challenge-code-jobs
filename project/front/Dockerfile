@@ -8,4 +8,4 @@ COPY ./app .
 
 RUN npm install --legacy-peer-deps
 
-CMD ["npm", "run", "start"]
+CMD ["npm", "run", "dev"]

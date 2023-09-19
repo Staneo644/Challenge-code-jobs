@@ -9,10 +9,15 @@ import { EmployersDomain } from './employers.domain';
 import { EnterprisesService } from '../enterprises/enterprises.service';
 import { EnterprisesDomain } from '../enterprises/enterprises.domain';
 import { JobsDomain } from '../jobs/jobs.domain';
-
+import { MulterModule } from '@nestjs/platform-express/multer';
 
 @Module({
-  imports: [MongooseModule.forFeature([{ name: 'Employer', schema: EmployerSchema }])],
+  imports: [MongooseModule.forFeature([{ name: 'Employer', schema: EmployerSchema }]),
+
+  MulterModule.register({
+    dest: './public/images', // Où les images seront stockées temporairement
+  }),
+],
   controllers: [EmployersController],
   providers: [EmployersService, EmployersDomain, EnterprisesService, EnterprisesDomain,JobsDomain, JobsService],
 })

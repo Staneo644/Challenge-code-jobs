@@ -52,3 +52,15 @@ export const userExist = async (email:string) => {
         return false;
     return true;
 }
+
+export const updateUser = async (email:string, employerData:EmployerData | jobSeekerData):Promise<boolean> => {
+    console.log("updating user " + email)
+    try {
+        const response = await axios.put(`${apiUrl}/users/${email}`, employerData);
+        console.log("updated user " + email + " : " + response.data)
+        return !!response.data;
+    } catch (error) {
+        console.error(error);
+        return false;
+    }
+}

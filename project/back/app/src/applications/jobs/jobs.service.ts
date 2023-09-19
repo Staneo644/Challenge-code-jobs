@@ -22,7 +22,7 @@ export class JobsService implements IJobsService {
     await JobModel.deleteOne({ _id: jobId }).exec();
     }
 
-  async findJobById(jobId: mongoose.Types.ObjectId): Promise<Job> {
+  async findJobById(jobId: mongoose.Types.ObjectId): Promise<JobId> {
     try {
       return await JobModel.findById(jobId).exec();
     } catch (error) {
@@ -33,6 +33,7 @@ export class JobsService implements IJobsService {
   async findAllJobs(): Promise<Job[]> {
     return await JobModel.find().exec();
   }
+
 
   async getEmployerJobs(employerId: string): Promise<Job[]> {
     return await JobModel.find({ employer_id: employerId }).exec();

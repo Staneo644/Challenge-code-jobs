@@ -23,11 +23,15 @@ export default function Register () {
   const [errorEnterprise, setErrorEnterprise] = useState(false);
   const [errorEmail, setErrorEmail] = useState(false);
   const [errorFormatEmail, setErrorFormatEmail] = useState(false);
+  const [errorIncomplet, setErrorIncomplet] = useState(false);
 
   const connect = (event:any) => {
     event.preventDefault();
-    if (!email || !name || !surname)
+    if (!email || !name || !surname || (searchEnterprise && !enterpriseName && selectedEnterprise === '')) {
+      setErrorIncomplet(true);
       return;
+    }
+    setErrorIncomplet(false);
     if (validator.isEmail(email) === false) {
       console.log("email format error")
       setErrorFormatEmail(true);
@@ -212,6 +216,7 @@ export default function Register () {
 
 
             <div>
+              {errorIncomplet && <p className="text-sm text-red-500">Veuillez remplir tous les champs</p>}
               <button
                
                className="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"

@@ -16,15 +16,9 @@ export class JobSeekersController {
     return this.jobSeekersService.getAllJobSeekers();
   }
 
-  @Get(':id')
-  findOne(@Param('id') email: string): Promise<JobSeeker | undefined> {
+  @Get(':email')
+  findOne(@Param('email') email: string): Promise<JobSeeker | undefined> {
     console.log('GET request received for jobSeeker: ', email);
     return this.jobSeekersService.getJobSeeker(email);
-  }
-
-  @Put(':id')
-  update(@Param('id') email: string, @Body() jobSeekerData: Partial<JobSeeker>): Promise<JobSeeker | undefined> {
-    console.log('PUT request received for jobSeeker: ', email);
-    return this.jobSeekersService.updateJobSeeker(email, jobSeekerData);
   }
 }

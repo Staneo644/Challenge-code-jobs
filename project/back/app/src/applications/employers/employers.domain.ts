@@ -6,6 +6,7 @@ import { EnterprisesService } from '../enterprises/enterprises.service';
 import { IEmployersDomain } from '../../core/employers/employer.interfaces';
 import { Job, JobId } from 'src/core/jobs/job.entity';
 import { JobsDomain } from '../jobs/jobs.domain';
+import * as fs from 'fs/promises';
 import * as mongoose from 'mongoose';
 
 @Injectable()
@@ -34,6 +35,17 @@ export class EmployersDomain implements IEmployersDomain {
         const res = this.isEmployer(employerData.email);
         if (!res) {
             return(null)
+        }
+        if (employerData.email !== email) {
+          const res2 = await this.enterprisesDomain.updateEnterpriseByEmail(email, employerData.email);
+          if (!res2) {
+            return(null)
+          }
+          const ret = await this.getEmployer(email);
+          const res3 = await this.jobsDomain.updateJobEmail(ret.jobs, employerData.email);
+          if (!res3) {
+            return(null)
+          }
         }
         return this.employerService.updateEmployer(email, employerData);
     }
@@ -72,10 +84,24 @@ export class EmployersDomain implements IEmployersDomain {
       if (!ret) {
         return null;
       }
-      const jobId:JobId = await this.jobsDomain.createJob(jobData);
-      ret.jobs.push(jobId._id);
-      return this.employerService.updateEmployer(email, ret);
-    }
+      const fs = require('fs');
+
+    //   fs.writeFileSync('image_test.png', jobData.imageBuffer);
+    //   const sharp = require('sharp');
+
+    //   // Analyse les métadonnées de l'image
+    //   sharp('./image_test.jpg').metadata((err, metadata) => {
+    //     if (err) {
+    //       console.error(err);
+    //     } else {
+    //       console.log('Métadonnées de l\'image :', metadata);
+    //     }});
+    
+         const jobId:JobId = await this.jobsDomain.createJob(jobData);
+         ret.jobs.push(jobId._id);
+         return this.employerService.updateEmployer(email, ret);
+    
+     }
 
     async deleteJobFromEmployer(email: string, jobId: mongoose.Types.ObjectId): Promise<Employer> {
       const ret = await this.getEmployer(email);

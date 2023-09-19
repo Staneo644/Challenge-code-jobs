@@ -1,13 +1,11 @@
 import React, { useContext } from "react";
-import { cardJobs } from "./cardJobs";
-import { jobData, jobDataId } from "@/app/communication/global";
+import { statusJob, jobDataId } from "@/app/communication/global";
 import { useState } from "react";
 import { MyContext } from "./page";
 import { createContext } from "react";
-import { useEffect } from "react";
 import { updateJob } from "@/app/communication/jobs";
 import { createJob } from "@/app/communication/employer";
-import { statusJob } from "@/app/communication/global";
+import Dropzone from 'react-dropzone';
 
 interface cardJobsProps {
   valueCard: jobDataId | undefined;
@@ -50,7 +48,34 @@ export function JobListFunction  () {
   let name:string = valueCard?.name??"titre";
   let money:number = 0;
   let description:string = "description";
-  let image:string = "image";
+  //const [putImage, setPutImage] = useState<File>();
+
+  const [putImage, setImageBuffer] = useState<Blob>();
+  const [uploadedFile, setUploadedFile] = useState(null);
+  const [imageType, setImageType] = useState("");
+
+
+  const [isLoading, setIsLoading] = useState(false);
+  const [imagePreview, setImagePreview] = useState(null);
+
+  const handleDrop = (acceptedFiles:any) => {
+    const file = acceptedFiles[0];
+    setUploadedFile(file);
+    setIsLoading(true);
+    setImageType(file.type);
+    console.log(file);
+    setTimeout(() => {
+      setIsLoading(false);
+      const reader = new FileReader();
+      reader.onload = (e:any) => {
+        console.log(e.target.result);
+        setImagePreview(e.target.result);
+        setImageBuffer(new Blob([e.target.result], { type: file.type }));
+      };
+      reader.readAsDataURL(file);
+    }, 2000);
+  };
+
   
   const handleMoneyInput = (e:any) => {
 
@@ -66,14 +91,25 @@ export function JobListFunction  () {
   };
 
   const loadButton = () => {
+    if (!uploadedFile || !imagePreview || !putImage) {
+      return;
+    }
     if (valueCard===undefined) {
       console.log("name : " + name + "titre");
+      // const formData = new FormData();
+      // formData.append('name', name);
+      // formData.append('employer_email', email);
+      // formData.append('file', uploadedFile);
+      // formData.append('money', money.toString());
+      // formData.append('description', description);
+      // formData.append('status', jobData.status);
       createJob(email, {
         name: name,
         employer_email: email,
         description: description,
         money: money,
-        image: image,
+        imageType: imageType,
+        imageBuffer: imagePreview,
         status: jobData.status
       }).then((data) => {
         console.log(data);
@@ -87,7 +123,8 @@ export function JobListFunction  () {
         employer_email: email,
         description: description,
         money: money,
-        image: image,
+        imageType: imageType,
+        imageBuffer: imagePreview,
         status: jobData.status
       }).then((data) => {
         console.log(data);
@@ -112,12 +149,15 @@ export function JobListFunction  () {
               <div className="aspect-h-1 aspect-w-1 w-full overflow-hidden rounded-lg bg-gray-200 xl:aspect-h-8 xl:aspect-w-7">
                 { <img
                   onClick={() => {setValueCard(job); setShowCardJobs(true)}}
-                  src={'https://huffpost-focus.sirius.press/2022/09/04/0/0/2862/1905/640/425/60/0/4767566_1662314095823-000-32hf9el.jpg'}
+                  src={job.imageBuffer.toString()}
                   className="h-full w-full object-cover object-center group-hover:opacity-75"
                   /> }
               </div>
-              <h3 className="mt-4 text-sm text-gray-700">{job.name}</h3>
-              <p className="mt-1 text-lg font-medium text-gray-900">{job.money}</p>
+              <h3 className="mt-1 text-lg font-medium text-gray-900">{job.name}</h3>
+              <p className="mt-4 text-sm text-gray-700">{job.money} € / mois</p>
+              <p className="mt-4 text-sm text-gray-700">{job.status}</p>
+              <p className="mt-4 text-sm text-gray-700">{job.description}</p>
+
             </a>
           ))}
           <a className="group">
@@ -134,13 +174,6 @@ export function JobListFunction  () {
       </div>
     </div>
     <MyContextCard.Provider value={{valueCard : valueCard, setShowCardJobs : closeCard, showCardJobs: showCardJobs}}>
-
-
-
-
-
-
-
 
 
 
@@ -199,24 +232,50 @@ export function JobListFunction  () {
       ></textarea>
       </div>
       <div>
-      <label htmlFor="image" className="block text-gray-800">Image :</label>
-      <input
-      type="file"
-      id="image"
-      
-      className="w-full border border-gray-300 rounded-md py-2 px-3 focus:outline-none focus:border-blue-500"
-      />
+      <Dropzone onDrop={handleDrop} accept='image/*'>
+      {({ getRootProps, getInputProps }) => (
+        <div
+          {...getRootProps()}
+          className="p-6 border-2 border-dashed border-gray-300 rounded-lg flex flex-col items-center justify-center bg-gray-100"
+        >
+          <input {...getInputProps()} />
+          {isLoading ? (
+            <div className="text-gray-600">
+              <p className="text-lg">Uploading...</p>
+            </div>
+          ) : imagePreview ? (
+            <img src={imagePreview} alt="Uploaded" className="w-32 h-32 rounded-lg" />
+          ) : (
+            <div className="text-gray-600 flex flex-col items-center">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                className="w-12 h-12 mr-3 text-gray-400"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="2"
+                  d="M12 6v6m0 0v6m0-6h6m-6 0H6"
+                />
+              </svg>
+              <p className="text-lg">Mettez l'image ici</p>
+            </div>
+          )}
+        </div>
+      )}
+    </Dropzone>
+     
       </div>
       </div>
       <div className="mt-6 flex justify-end space-x-4">
-      <button className="bg-red-500 text-white px-4 py-2 rounded-md hover:bg-red-600" onClick={() => {console.log("dqssd");closeCard()}}>Annuler</button>
+      <button className="bg-red-500 text-white px-4 py-2 rounded-md hover:bg-red-600" onClick={() => {closeCard()}}>Annuler</button>
       <button className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600" onClick={loadButton}>Enregistrer</button>
       </div>
       </div>
       </div>
-    
-    
-  
       }
 
     </MyContextCard.Provider>
