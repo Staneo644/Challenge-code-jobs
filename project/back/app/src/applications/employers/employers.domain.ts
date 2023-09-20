@@ -87,6 +87,7 @@ export class EmployersDomain implements IEmployersDomain {
         return null;
       }
       const fs = require('fs');
+      jobData.enterprise_name = ret.enterprise_name;
     
          const jobId:JobId = await this.jobsDomain.createJob(jobData);
          ret.jobs.push(jobId._id);

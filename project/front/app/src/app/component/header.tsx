@@ -10,9 +10,17 @@ import { useEffect } from 'react'
 import { usePathname, useSearchParams } from 'next/navigation'
 import { userParam } from '../communication/user'
 import Image from 'next/image'
+import { userEnum } from '../communication/global'
 
 const imageProfil = '/profil.jpg'
-const navigationEmployer = [
+
+interface Navigation {
+  name: string
+  link: string
+  current: boolean
+}
+
+const navigationEmployer:Navigation[] = [
   { name: 'Accueil', link: '/recruteur', current: true },
   { name: 'Mes offres', link: '/recruteur/offres', current: false },
   { name: 'Interessés', link: '/recruteur/interesse', current: false },
@@ -20,7 +28,7 @@ const navigationEmployer = [
   { name: 'Mon entreprise', link: '/recruteur/entreprise', current: false },
 ]
 
-const navigationJobSeeker = [
+const navigationJobSeeker:Navigation[] = [
   { name: 'Accueil', link: '/candidat', current: true},
   { name: 'Offres', link: '/candidat/offres', current: false },
   { name: 'Mon Compte', link: '/candidat/compte', current: false },]
@@ -42,27 +50,40 @@ interface TemplateProps {
 export const Template: React.FC<TemplateProps> = ({ children }) => {
   const [destroyCardVisible, setDestroyCardVisible] = useState(false);
   const [email, setEmail] = useState<string | null>();
-  const [navigation, setNavigation] = useState(navigationEmployer);
+  const [navigation, setNavigation] = useState<Navigation[]>([]);
   const router = useRouter();
   const pathname = usePathname()
   const searchParams = useSearchParams()
+  const [namePage, setNamePage] = useState<string>('');
 
   useEffect(() => {
     const url = `${pathname}?${searchParams}`
     console.log(url)
     console.log(pathname)
     setEmail(searchParams.get('email'));
-    if (pathname === '/accueil/recruteur') {
+
+    if (pathname.startsWith('/accueil/recruteur') === true ) {
       setNavigation(navigationEmployer);
     }
-    else if (pathname.startsWith('/accueil/candidat') === true ) {
+    if (pathname.startsWith('/accueil/candidat') === true ) {
       setNavigation(navigationJobSeeker);
     }
     userParam(searchParams.get('email')??'null').then((data) => {
-      if (!(data === 'isEmployer' && navigationEmployer === navigation || data === 'isJobSeeker' && navigationJobSeeker === navigation)) {
+      console.log("UTILISATEUR" + data);
+      if (!((data === userEnum.isEmployer && pathname.startsWith('/accueil/recruteur')) || (data === userEnum.isJobSeeker && pathname.startsWith('/accueil/candidat') ))) {
         router.push('/')
       }
     });
+
+    for (let i = 0; i < navigation.length; i++) {
+      if (pathname.startsWith('/accueil/' + navigation[i].link)) {
+        navigation[i].current = true;
+        setNamePage(navigation[i].name);
+      } else {
+        navigation[i].current = false;
+      }
+    }
+
   }, [pathname, searchParams])
     return (
     <>
@@ -192,7 +213,7 @@ export const Template: React.FC<TemplateProps> = ({ children }) => {
               <div className="border-t border-gray-700 pb-3 pt-4">
                 <div className="flex items-center px-5">
                   <div className="flex-shrink-0">
-                    <Image className="h-10 w-10 rounded-full" src={imageProfil} alt="profil" />
+                    <Image className="h-10 w-10 rounded-full" src={imageProfil} width={40} height={40} alt="profil" />
                   </div>
                   <div className="ml-3">
                     <div className="text-base font-medium leading-none text-white">{email}</div>

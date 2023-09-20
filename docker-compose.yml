@@ -2,19 +2,6 @@ version: "3.9"
 
 services:
 
-  # adminer:
-  #   container_name: adminer
-  #   restart: unless-stopped
-  #   build:
-  #     context: ./project/adminer
-  #   ports:
-  #     - 8081:8080
-  #   networks:
-  #     - networkjob
-  #   depends_on:
-  #     - db
-
-
   back:
     init: true
     container_name: back
@@ -46,14 +33,14 @@ services:
   db:
     init: true
     container_name: db
-    image: mongo:latest
+    build:
+      context: ./project/database
     ports:
       - "27017:27017"
-    # volumes:
-      # - db_data:/data/db
-
     networks:
       - networkjob
+    # volumes:
+      # - db_data:/data/db
       
 volumes:
   db_data:

@@ -1,7 +1,6 @@
 import { Document, Schema, Types } from 'mongoose';
 import mongoose from 'mongoose';
 import { IsNotEmpty, IsEmail } from 'class-validator';
-import { UseInterceptors } from '@nestjs/common';
 
 export interface jobData {
   employer_email: string;

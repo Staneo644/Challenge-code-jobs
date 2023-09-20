@@ -1,8 +1,23 @@
 import axios from 'axios';
-import { jobSeekerData, apiUrl } from './global';
+import { jobSeekerData, apiUrl, jobDataId } from './global';
+import { promises } from 'dns';
 
 
-export const getJobSeeker = async (email:string) => {
+
+export const getJobs = async (email:string):Promise<jobDataId[]> => {
+  console.log("searching for jobs " + email)
+  try {
+    const response = await axios.get(`${apiUrl}/jobseekers/jobs/${email}`);
+    console.log("found jobs " + email + " : " + response.data)
+    return response.data;
+  }
+  catch(error){
+    console.error('Erreur lors de la récupération de tous les emplois :', error);
+    throw error;
+  };
+}
+
+export const getJobSeeker = async (email:string) : Promise<jobSeekerData | null> => {
   console.log("searching for job seeker " + email)
  try {
   const response = await axios.get(`${apiUrl}/jobseekers/${email}`);
@@ -24,10 +39,22 @@ export const getJobSeeker = async (email:string) => {
     
     return data;
  }
-    
-    catch(error){
-      console.error('Erreur lors de la vérification de l\'employeur :', error);
-      console.error(error);
-      return(null)
-    };
+ catch(error){
+   console.error('Erreur lors de la vérification de l\'employeur :', error);
+   console.error(error);
+   return(null)
   } 
+ };
+
+ export const addSeeingJob = async (email:string, jobData: string) => {
+  console.log("adding job " + jobData + " of " + email)
+  try {
+    const response = await axios.post(`${apiUrl}/jobs/${email}`, {jobData}
+    );
+    console.log('Response:', response.data);
+  } catch (error) {
+    console.error('Erreur lors de l\'ajout de l\'emploi', error);
+    throw error;
+  }
+};
+    

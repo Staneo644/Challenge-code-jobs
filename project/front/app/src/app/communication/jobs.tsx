@@ -24,3 +24,15 @@ export const findAllJobs = async (): Promise<jobData[]> => {
       throw error;
     }
   };
+
+  export const addInterestedUser = async (email:string, jobData:jobData) => {
+    console.log("adding user" + email + "to job " + jobData)
+    try {
+      const response = await axios.post(`${apiUrl}/jobs/${email}`, jobData);
+      console.log("added interested user to job " + email +  " : " + response.data)
+      return response.data;
+    } catch (error) {
+      console.error('Erreur lors de l\'ajout de l\'utilisateur intéressé', error);
+      throw error;
+    }
+  }

@@ -1,12 +1,9 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { Job, JobId, JobModel } from '../../core/jobs/job.entity'; 
-import { JobsModule } from './jobs.module';
-import { IJobsService } from 'src/core/jobs/job.interfaces';
-import { ObjectId } from 'mongoose';
 import * as mongoose from 'mongoose';
 
 @Injectable()
-export class JobsService implements IJobsService {
+export class JobsService {
 
 
   async createJob( jobData: Job): Promise<any> {

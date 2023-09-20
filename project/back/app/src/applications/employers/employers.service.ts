@@ -1,11 +1,9 @@
 import { Injectable } from '@nestjs/common';
 import { Employer } from '../../core/employers/employer.entity';
-import { JobsService } from '../jobs/jobs.service';
-import { IEmployersService } from '../../core/employers/employer.interfaces';
 import { EmployerModel } from '../../core/employers/employer.entity';
 
 @Injectable()
-export class EmployersService implements IEmployersService {
+export class EmployersService {
     
 
     async createEmployer(employerData: Employer): Promise<Employer> {

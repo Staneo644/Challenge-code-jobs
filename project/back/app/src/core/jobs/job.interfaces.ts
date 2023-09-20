@@ -1,11 +1,27 @@
-import { Job } from '../../core/jobs/job.entity';
-import * as mongoose from 'mongoose';
+import mongoose from 'mongoose';
+import { jobData, Job } from 'src/core/jobs/job.entity';
 
-export interface IJobsService {
-  createJob(jobData: Job): Promise<Job>;
-  updateJob( jobId: mongoose.Types.ObjectId, jobData: Job): Promise<Job>;
-  deleteJob( jobId: mongoose.Types.ObjectId): Promise<void>;
-  findJobById(jobId: mongoose.Types.ObjectId): Promise<Job> 
+export interface IJobsDomain {
+    
+  createJob(jobData: Job): Promise<any>;
+  
+  updateJob(jobId: mongoose.Types.ObjectId, jobData: jobData): Promise<Job | null>;
+  
+  updateJobEmail(jobId: mongoose.Types.ObjectId[], newEmail: string): Promise<boolean>;
+  
+  updateJobEnterprise(jobId: mongoose.Types.ObjectId[], newEnterprise: string): Promise<boolean>;
+  
+  updateJobInterested(jobId: mongoose.Types.ObjectId[], notInterested: string): Promise<void>;
+  
+  deleteJob(jobId: mongoose.Types.ObjectId): Promise<void>;
+  
+  getJobsById(jobId: mongoose.Types.ObjectId[]): Promise<Job[]>;
+  
+  findJobById(jobId: mongoose.Types.ObjectId): Promise<Job | null>;
+  
   findAllJobs(): Promise<Job[]>;
+  
   getEmployerJobs(employerId: string): Promise<Job[]>;
+  
+  addJobSeeker(email: string, jobData: Job): Promise<boolean>;
 }

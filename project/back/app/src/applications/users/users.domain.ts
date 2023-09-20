@@ -4,11 +4,11 @@ import { JobSeekersDomain } from '../job-seekers/job-seekers.domain';
 import { Employer } from 'src/core/employers/employer.entity';
 import { JobSeeker } from 'src/core/job-seekers/job-seeker.entity';
 import { userEnum } from 'src/core/users/user.interfaces';
-import { jobData } from 'src/core/jobs/job.entity';
+import { IUsersDomain } from 'src/core/users/user.interfaces';
 
 
 @Injectable()
-export class UsersDomain {
+export class UsersDomain implements IUsersDomain{
     constructor (
         private readonly employersDomain: EmployersDomain, 
         private readonly jobSeekersDomain: JobSeekersDomain){}

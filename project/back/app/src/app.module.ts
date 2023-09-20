@@ -9,11 +9,10 @@ import { JobsModule } from './applications/jobs/jobs.module';
 import { EnterprisesModule } from './applications/enterprises/enterprises.module';
 import { JobSeekersModule } from './applications/job-seekers/job-seekers.module';
 import { UsersModule } from './applications/users/users.module';
-import { ImageModule } from './applications/image/image.module';
 
 @Module({
   imports: [DatabaseModule, EmployersModule, JobsModule, EnterprisesModule, JobSeekersModule, UsersModule,
-    ImageModule,
+   
   ],
   controllers: [AppController],
   providers: [AppService],

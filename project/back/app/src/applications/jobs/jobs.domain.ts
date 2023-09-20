@@ -1,12 +1,11 @@
 import { Injectable } from '@nestjs/common';
-import { Job, JobId, JobModel, jobData } from '../../core/jobs/job.entity';
+import { Job, JobId, jobData } from '../../core/jobs/job.entity';
 import { JobsService } from './jobs.service';
 import * as mongoose from 'mongoose';
-import { IEmployersDomain } from '../../core/employers/employer.interfaces';
-import * as fs from 'fs/promises';
+import { IJobsDomain } from '../../core/jobs/job.interfaces';
 
 @Injectable()
-export class JobsDomain {
+export class JobsDomain implements IJobsDomain {
 
   constructor(
     private readonly jobsService: JobsService) {}
@@ -56,23 +55,14 @@ export class JobsDomain {
     }
   }
 
-  async isJobExists(jobId: mongoose.Types.ObjectId): Promise<boolean> {
-    const job = await this.findJobById(jobId);
-    return !!job;
+  async updateJobInterested(jobId: mongoose.Types.ObjectId[], notInterested: string): Promise<void> {
+    for (let i = 0; i < jobId.length; i++) {
+      const element = await this.findJobById(jobId[i]);
+      if (element && element.interested_jobseekers.includes(notInterested)) {
+        element.interested_jobseekers.splice(element.interested_jobseekers.indexOf(notInterested), 1);
+        this.updateJob(jobId[i], element);
+      }
     }
-
-  async createImage(image: Express.Multer.File): Promise<string> {
-    if (!image || !image.originalname) {
-      console.log('No image provided');
-      return null;
-    }
-    const imageFileName = `${Date.now()}-${image.originalname}`;
-      const imagePath = `./public/images/${imageFileName}`;
-      return imagePath;
-  }
-
-  async deleteImage(image: string): Promise<void> {
-    return await fs.unlink(image);
   }
 
   async deleteJob(jobId: mongoose.Types.ObjectId): Promise<void> {
