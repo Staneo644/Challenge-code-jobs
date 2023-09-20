@@ -18,11 +18,11 @@ export class EmployersService implements IEmployersService {
     } 
   
     async updateEmployer(email: string, employerData: Partial<Employer>): Promise<Employer> {
+      console.log(employerData, email)
       return await EmployerModel.findOneAndUpdate(
         { email },
-        employerData,
-        { new: true },
-      );
+        employerData
+        );
     }
   
     async deleteEmployer(email: string): Promise<void> {

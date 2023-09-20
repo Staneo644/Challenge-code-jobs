@@ -70,11 +70,11 @@ export class UsersDomain {
     }
   
     async checkUser(email: string): Promise<userEnum> {
-        const employer = await this.employersDomain.getEmployer(email);
+        const employer = await this.employersDomain.isEmployer(email);
         if (employer){
             return (userEnum.isEmployer);
         }
-        const jobSeeker = await this.jobSeekersDomain.getJobSeeker(email);
+        const jobSeeker = await this.jobSeekersDomain.isJobSeeker(email);
         if (jobSeeker){
             return (userEnum.isJobSeeker);
         }

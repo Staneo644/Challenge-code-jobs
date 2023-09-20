@@ -13,9 +13,6 @@ export const findAllJobs = async (): Promise<jobData[]> => {
     }
   };
   
-  // Fonction pour créer un emploi
-  
-  // Fonction pour mettre à jour un emploi
   export const updateJob = async (jobId:string, jobData:jobData) => {
     console.log("updating job " + jobId)
     try {
@@ -27,5 +24,3 @@ export const findAllJobs = async (): Promise<jobData[]> => {
       throw error;
     }
   };
-  
-  // Fonction pour supprimer un emploi

@@ -3,7 +3,7 @@
 import React, { use } from 'react';
 import {Template} from '@/app/component/header';
 import '../../../globals.css'
-import changeAccount from '@/app/component/changeAccount';
+import ChangeAccount from '@/app/component/ChangeAccount';
 import { usePathname, useSearchParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { type } from 'os';
@@ -50,9 +50,9 @@ export default function Home() {
         <Template>
         return (
     <div className="bg-white p-4 rounded-lg shadow-md">
-      {/* Affichez les détails de l'offre ici */}
+   
       <div className="mb-4">
-        {/* Contenu de l'offre */}
+       
       </div>
       <div className="flex justify-between">
       <div className="flex">

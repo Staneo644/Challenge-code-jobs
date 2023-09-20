@@ -11,15 +11,8 @@ import { EnterprisesDomain } from '../enterprises/enterprises.domain';
 import { EnterprisesService } from '../enterprises/enterprises.service';
 import { JobSeekersModule } from '../job-seekers/job-seekers.module';
 import { MongooseModule } from '@nestjs/mongoose';
-import {MulterModule} from '@nestjs/platform-express/multer';
 
 @Module({
-  imports: [
-
-  MulterModule.register({
-    dest: './public/images', // Où les images seront stockées temporairement
-  }),
-],
   providers: [JobsService, JobsDomain],
   controllers: [JobsController]
 })

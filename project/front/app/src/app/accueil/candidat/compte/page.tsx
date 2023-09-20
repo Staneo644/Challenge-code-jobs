@@ -3,7 +3,7 @@
 import React, { use } from 'react';
 import {Template} from '@/app/component/header';
 import '../../../globals.css'
-import changeAccount from '@/app/component/changeAccount';
+import ChangeAccount from '@/app/component/ChangeAccount';
 
 export default function Home() {
     return(
@@ -11,7 +11,7 @@ export default function Home() {
 
         <main className="flex flex-col h-screen">
         <Template>
-        {changeAccount(false)}
+        {ChangeAccount(false)}
         </Template>
         
       </main>

@@ -20,19 +20,7 @@ export class JobsController {
     @Get(':jobId')
     async findJobById( @Param('jobId') jobId: mongoose.Types.ObjectId, @Res() res) {
       const ret = await this.jobsService.findJobById(jobId).then((job) => {
-
-      //   console.log('GET request received for job ', jobId)
-      //   try {
-      //     const fileStream = createReadStream(job.image);
-      //     fileStream.pipe(res);
-      //     return ret;
-      //   }
-      //   catch (error) {
-      //     return null;
-      //   }
-      // })
       return job;})
-
     }
 
     @Get('image/:jobId')
@@ -44,6 +32,15 @@ export class JobsController {
 
       })
     }
+
+  
+    @Post(':email')
+    async validateJob( @Param('email') email: string, @Body() jobData: JobId) {
+      console.log('POST request received to validate job ', jobData)
+      return this.jobsService.addJobSeeker(email, jobData);
+    }
+
+
   
     @Put(':jobId')
     updateJob( @Param('jobId') jobId: mongoose.Types.ObjectId, @Body() jobData: jobData) {
@@ -51,10 +48,6 @@ export class JobsController {
       return this.jobsService.updateJob(jobId, jobData);
     }
 
-    @Put('image/:jobId')
-    @UseInterceptors(FileInterceptor('image'))
-    updateJobWithImage( @Param('jobId') jobId: mongoose.Types.ObjectId, @Body() jobData: jobData, @UploadedFile() image: Express.Multer.File) {
-      console.log('PUT request received for job ', jobId)
-      return this.jobsService.updateJobWithImage(jobId, jobData, image);
-    }
+
+
 }

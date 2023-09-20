@@ -9,8 +9,9 @@ import { useRouter } from 'next/navigation'
 import { useEffect } from 'react'
 import { usePathname, useSearchParams } from 'next/navigation'
 import { userParam } from '../communication/user'
+import Image from 'next/image'
 
-const imageProfil = 'https://s2.qwant.com/thumbr/0x380/e/d/de00606904e6cfffb72b93625574e7f6d55c8b345140aea0c94ae4e4e727c0/vector-sign-of-user-icon.jpg?u=https%3A%2F%2Fstatic.vecteezy.com%2Fsystem%2Fresources%2Fpreviews%2F000%2F574%2F512%2Foriginal%2Fvector-sign-of-user-icon.jpg&q=0&b=1&p=0&a=0'
+const imageProfil = '/profil.jpg'
 const navigationEmployer = [
   { name: 'Accueil', link: '/recruteur', current: true },
   { name: 'Mes offres', link: '/recruteur/offres', current: false },
@@ -65,13 +66,7 @@ export const Template: React.FC<TemplateProps> = ({ children }) => {
   }, [pathname, searchParams])
     return (
     <>
-    {/*
-      This example requires updating your template:
-      ```
-      <html class="h-full bg-gray-100">
-      <body class="h-full">
-      ```
-    */}
+    
     <div className="min-h-full">
       <Disclosure as="nav" className="bg-gray-800 static">
         {({ open }) => (
@@ -80,7 +75,10 @@ export const Template: React.FC<TemplateProps> = ({ children }) => {
               <div className="flex h-16 items-center justify-between">
                 <div className="flex items-center">
                   <div className="flex-shrink-0">
-                    <img
+                    <Image
+                      width={50}
+                      height={50}
+                    
                       className="h-8 w-8"
                       src="/logo.png"
                       alt="logo"
@@ -117,13 +115,13 @@ export const Template: React.FC<TemplateProps> = ({ children }) => {
                       <BellIcon className="h-6 w-6" aria-hidden="true" />
                     </button>
 
-                    {/* Profile dropdown */}
+                 
                     <Menu as="div" className="relative ml-3">
                       <div>
                         <Menu.Button className="relative flex max-w-xs items-center rounded-full bg-gray-800 text-sm focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800">
                           <span className="absolute -inset-1.5" />
                           <span className="sr-only">Open user menu</span>
-                          <img className="h-8 w-8 rounded-full" src={imageProfil} alt="" />
+                          <Image className="h-8 w-8 rounded-full" src={imageProfil} alt="Profil" width={32} height={32}/>
                         </Menu.Button>
                       </div>
                       <Transition
@@ -160,7 +158,7 @@ export const Template: React.FC<TemplateProps> = ({ children }) => {
                   </div>
                 </div>
                 <div className="-mr-2 flex md:hidden">
-                  {/* Mobile menu button */}
+                
                   <Disclosure.Button className="relative inline-flex items-center justify-center rounded-md bg-gray-800 p-2 text-gray-400 hover:bg-gray-700 hover:text-white focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800">
                     <span className="absolute -inset-0.5" />
                     <span className="sr-only">Open main menu</span>
@@ -194,7 +192,7 @@ export const Template: React.FC<TemplateProps> = ({ children }) => {
               <div className="border-t border-gray-700 pb-3 pt-4">
                 <div className="flex items-center px-5">
                   <div className="flex-shrink-0">
-                    <img className="h-10 w-10 rounded-full" src={imageProfil} alt="" />
+                    <Image className="h-10 w-10 rounded-full" src={imageProfil} alt="profil" />
                   </div>
                   <div className="ml-3">
                     <div className="text-base font-medium leading-none text-white">{email}</div>

@@ -8,6 +8,7 @@ import { createJob } from "@/app/communication/employer";
 import Dropzone from 'react-dropzone';
 import { DropzoneOptions } from 'react-dropzone';
 import { useEffect } from "react";
+import Image from 'next/image';
 
 interface cardJobsProps {
   valueCard: jobDataId | undefined;
@@ -47,9 +48,9 @@ export function JobListFunction  () {
       jobData.status = 'actif';
   }
 
-  let name:string = valueCard?.name??"titre";
-  let money:number = valueCard?.money??0;
-  let description:string = valueCard?.description??"description";
+  const [name, setName] = useState(valueCard?.name??"");
+  const [money, setMoney] = useState(valueCard?.money??0)
+  const [description, setDescription] = useState(valueCard?.description??"description");
 
   const [imageType, setImageType] = useState("");
   const [imagePreview, setImagePreview] = useState(valueCard?.imageBuffer);
@@ -133,6 +134,7 @@ export function JobListFunction  () {
       }
       );
     }
+    setImagePreview(undefined);
   }
 
 
@@ -144,10 +146,13 @@ export function JobListFunction  () {
         <h2 className="sr-only">Products</h2>
 
         <div className="grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 xl:gap-x-8">
-          {jobList.map((job) => (
+          {Array.isArray(jobList) && jobList.map((job) => (
             <a key={job._id} className="group">
               <div className="aspect-h-1 aspect-w-1 w-full overflow-hidden rounded-lg bg-gray-200 xl:aspect-h-8 xl:aspect-w-7">
-                { <img
+                { <Image
+                  width={200}
+                  height={200}
+                  alt="job image"
                   onClick={() => {setValueCard(job); setShowCardJobs(true)}}
                   src={job.imageBuffer.toString()}
                   className="h-full w-full object-cover object-center group-hover:opacity-75"
@@ -162,9 +167,12 @@ export function JobListFunction  () {
           ))}
           <a className="group">
               <div className="aspect-h-1 aspect-w-1 w-full overflow-hidden rounded-lg bg-gray-200 xl:aspect-h-8 xl:aspect-w-7 border-dotted border-4 border-black">
-                { <img
+                { <Image
+                  width={200}
+                  height={200}
+                  alt="créer un nouveau job"
                   onClick={() => {setValueCard(undefined), setShowCardJobs(true)}}
-                  src={'https://s2.qwant.com/thumbr/0x380/5/8/9e5c051a7937df5eb288ca1c4d420cfb7219b79498a54e4f52239a361f2309/plus-icon-vector-illustration.jpg?u=https%3A%2F%2Fstatic.vecteezy.com%2Fsystem%2Fresources%2Fpreviews%2F000%2F582%2F052%2Foriginal%2Fplus-icon-vector-illustration.jpg&q=0&b=1&p=0&a=0'}
+                  src={'/plus-illustration.webp'}
                   className="h-full w-full object-cover object-center group-hover:opacity-75"
                 /> }
               </div>
@@ -183,17 +191,17 @@ export function JobListFunction  () {
       <div className="fixed inset-0 bg-gray-900 bg-opacity-70 overflow-y-auto p-6 flex items-center justify-center">
       <div className="bg-white max-w-md rounded-lg shadow-lg p-6 text-black">
       <h2 className="text-2xl font-semibold mb-4">
-      {valueCard===undefined && <>Faites une nouvelle offre d'emploi</>}
-      {valueCard!==undefined && <>Modifiez l'offre</>}
+      {valueCard===undefined && <>Faites une nouvelle offre d&apos;emploi</>}
+      {valueCard!==undefined && <>Modifiez l&apos;offre</>}
       </h2>
       <div className="space-y-4">
       <div>
       <label htmlFor="name">Titre :</label>
       <input
       type="text"
-      onChange={(e) => {name = e.target.value}}
+      onChange={(e) => {setName(e.target.value)}}
       id="name"
-      {...(valueCard!==undefined && {defaultValue: valueCard.name})}
+      value={name}
       className="w-full border border-gray-300 rounded-md py-2 px-3 focus:outline-none focus:border-blue-500"
       />
       </div>
@@ -202,10 +210,9 @@ export function JobListFunction  () {
       <input
       id="money"
       {...(valueCard!==undefined && {defaultValue: valueCard.money})}
-      
       className="w-full border border-gray-300 rounded-md py-2 px-3 focus:outline-none focus:border-blue-500"
       onKeyDown={handleMoneyInput}
-      onChange={(e) => {money = Number(e.target.value)}}
+      onChange={(e) => {setMoney(Number(e.target.value))}}
       />
       </div>
       <div>
@@ -225,9 +232,9 @@ export function JobListFunction  () {
       <label htmlFor="description" className="block text-gray-800">Description :</label>
       <textarea
       id="description"
-      {...(valueCard!==undefined && {defaultValue: valueCard.description})}
+      value={description}
       rows={4}
-      onChange={(e) => {description = e.target.value}}
+      onChange={(e) => {setDescription(e.target.value)}}
       className="w-full border border-gray-300 rounded-md py-2 px-3 focus:outline-none focus:border-blue-500"
       ></textarea>
       </div>
@@ -244,7 +251,8 @@ export function JobListFunction  () {
               <p className="text-lg">Uploading...</p>
             </div>
           ) : imagePreview ? (
-            <img src={imagePreview} alt="Uploaded" className="w-32 h-32 rounded-lg" />
+            <Image src={imagePreview} alt="Uploaded" className="w-32 h-32 rounded-lg"
+            width={32 * 4} height={32 * 4} />
           ) : (
             <div className="text-gray-600 flex flex-col items-center">
               <svg
@@ -261,7 +269,7 @@ export function JobListFunction  () {
                   d="M12 6v6m0 0v6m0-6h6m-6 0H6"
                 />
               </svg>
-              <p className="text-lg">Mettez l'image ici</p>
+              <p className="text-lg">Mettez l&apos;image ici</p>
             </div>
           )}
         </div>

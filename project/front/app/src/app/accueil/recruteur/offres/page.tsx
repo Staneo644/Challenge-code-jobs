@@ -1,6 +1,6 @@
 'use client';
 
-import React from 'react';
+import React, { useCallback } from 'react';
 import {Template} from '@/app/component/header';
 import { useEffect, useState, useContext } from 'react';
 import { usePathname, useSearchParams } from 'next/navigation';
@@ -27,22 +27,19 @@ export default function Home() {
     const [email, setEmail] = useState('')
     
     
-    const getJobsList = ():void => {
+    const getJobList = () => {
       getEmployerJobs(email).then((data) => {
         console.log(data);
         setJobList(data ?? []);
-        
-      });
-    }
+      })};
+    
 
 
     useEffect(() => {
       if (email === '') {
         return
       }
-      
-      getJobsList()
-      
+      getJobList()
     }, [email])
     
     
@@ -68,7 +65,7 @@ export default function Home() {
         <Template>
         <MyContext.Provider value={{
           data: jobList,
-          reload: getJobsList,
+          reload: getJobList,
           email: email
 
         }}>

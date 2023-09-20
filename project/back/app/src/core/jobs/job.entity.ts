@@ -13,6 +13,7 @@ export interface jobData {
   imageType: string;
   imageBuffer: string;
   date: Date;
+  interested_jobseekers: string[];
 }
 
 export class Job {
@@ -52,6 +53,8 @@ export class Job {
   @IsNotEmpty({ message: 'buffer is required' })
   imageBuffer: string;
 
+  interested_jobseekers: string[];
+
   date: Date;
 }
 
@@ -69,6 +72,7 @@ export const JobSchema = new Schema<Job>({
   imageType: { type: String, required: true },
   imageBuffer: { type: String, required: true },
   date: { type: Date, required: true },
+  interested_jobseekers: [{ type: String}],
 });
 
 export const JobModel = mongoose.model<Job>('Job', JobSchema);

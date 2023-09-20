@@ -4,6 +4,7 @@ import {createEnterprise, getEnterprise} from "../communication/enterprise";
 import { EnterpriseData, userEnum } from "../communication/global";
 import { createUser, userExist } from "../communication/user";
 import validator from "validator";
+import Image from 'next/image';
 import { useRouter } from "next/navigation";
 
 
@@ -95,7 +96,9 @@ export default function Register () {
     <>
     <div className="flex min-h-full flex-1 flex-col justify-center px-6 py-12 lg:px-8">
         <div className="sm:mx-auto sm:w-full sm:max-w-sm">
-          <img
+          <Image
+            width={200}
+            height={200}
             className="mx-auto h-20 w-auto sm:h-32 rounded-xl"
             src="/logo.png"
             alt="Your Company"
@@ -127,8 +130,8 @@ export default function Register () {
                     className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                     />
                 </div>
-                {errorFormatEmail && <p className="text-sm text-red-500">L'email n'est pas au bon format</p>}
-                {errorEmail && <p className="text-sm text-red-500">L'email existe déjà</p>}
+                {errorFormatEmail && <p className="text-sm text-red-500">L&apos;email n&apos;est pas au bon format</p>}
+                {errorEmail && <p className="text-sm text-red-500">L&apos;email existe déjà</p>}
               </div>
 
               <div>
@@ -165,7 +168,7 @@ export default function Register () {
               <fieldset>
 
                   <input id="draft" className="peer/draft" type="radio" name="status" required onChange={(e) => setIsEmployer(false)}/>
-                  <label className="text-gray-900 p-3">  En recherche d'emplois  </label>
+                  <label className="text-gray-900 p-3">  En recherche d&apos;emplois  </label>
 
                   <input id="published" className="peer/published" type="radio" name="status" onChange={(e) => setIsEmployer(true)}/>
                   <label className="text-gray-900 p-3">  Employeur  </label>
@@ -196,7 +199,7 @@ export default function Register () {
               
               <div>
                 <label className="block text-sm font-medium leading-6 text-gray-900">
-                  L'entreprise n'est pas dans la liste ? Créé-là !
+                  L&apos;entreprise n&apos;est pas dans la liste ? Créé-là !
                 </label>
                 <div className="mt-2">
                   <input
@@ -208,7 +211,7 @@ export default function Register () {
                     className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                     />
                 </div>
-                {errorEnterprise && <p className="text-sm text-red-500">L'entreprise existe déjà</p>}
+                {errorEnterprise && <p className="text-sm text-red-500">L&apos;entreprise existe déjà</p>}
               </div>
               </>
             

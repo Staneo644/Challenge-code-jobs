@@ -32,22 +32,10 @@ export const getEmployer = async (email:string) => {
   }
 
   export const createJob = async (employerEmail: string, jobData: jobData) => {
-    //console.log("creating job " + jobData.name + " of " + employerEmail)
+    console.log("creating job " + jobData.name + " of " + employerEmail + " : " + jobData)
     try {
-      // const formData = new FormData();
-      // if (image !== undefined) {
-      //   console.log("image ", image)
-      //   formData.append('image', new Blob([image]));
-      //   console.log("blob ", new Blob([image])) 
-      // }
-      // else
-      //   console.log("no image")
-      // formData.append('jobData', JSON.stringify(jobData));
-  
       const response = await axios.post(`${apiUrl}/employers/${employerEmail}`, jobData
       );
-  
-      // Handle the response here if needed
       console.log('Response:', response.data);
     } catch (error) {
       console.error('Erreur lors de la création de l\'emploi', error);
@@ -55,7 +43,6 @@ export const getEmployer = async (email:string) => {
     }
   };
   
-  // Fonction pour récupérer tous les emplois d'un employeur spécifique
   export const getEmployerJobs = async (employerEmail:string):Promise<jobDataId[]> => {
     console.log("searching for jobs of " + employerEmail)
     try {
@@ -68,7 +55,6 @@ export const getEmployer = async (email:string) => {
     }
   };
   
-  // Fonction pour supprimer un emploi d'un employeur spécifique par ID
   export const deleteJob = async (employerEmail:string, jobId:string) => {
     console.log("deleting job " + jobId + " of " + employerEmail)
     try {

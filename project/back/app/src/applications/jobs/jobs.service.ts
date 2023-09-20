@@ -1,5 +1,5 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { Job, JobId, JobModel } from '../../core/jobs/job.entity'; // Importez votre entité Job définie dans le core
+import { Job, JobId, JobModel } from '../../core/jobs/job.entity'; 
 import { JobsModule } from './jobs.module';
 import { IJobsService } from 'src/core/jobs/job.interfaces';
 import { ObjectId } from 'mongoose';
@@ -30,7 +30,7 @@ export class JobsService implements IJobsService {
     }
   }
 
-  async findAllJobs(): Promise<Job[]> {
+  async findAllJobs(): Promise<JobId[]> {
     return await JobModel.find().exec();
   }
 

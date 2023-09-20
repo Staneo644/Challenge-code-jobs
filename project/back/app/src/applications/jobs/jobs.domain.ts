@@ -38,7 +38,9 @@ export class JobsDomain {
       if (!element) {
         return false;
       }
-      this.updateJob(jobId[i],{description:element.description,  name: element.name, imageBuffer : element.imageBuffer, imageType: element.imageType, money: element.money, status: element.status, employer_email: newEmail, enterprise_name: element.enterprise_name, date: element.date});
+      element.employer_email = newEmail;
+      this.updateJob(jobId[i], element);
+      return true;
     }
   }
 
@@ -48,7 +50,9 @@ export class JobsDomain {
       if (!element) {
         return false;
       }
-      this.updateJob(jobId[i],{description:element.description,  name: element.name, imageBuffer: element.imageBuffer, imageType:element.imageType, money: element.money, status: element.status, employer_email: element.employer_email, enterprise_name: newEnterprise, date: element.date});
+      element.enterprise_name = newEnterprise;
+      this.updateJob(jobId[i], element);
+      return true;
     }
   }
 
@@ -64,8 +68,6 @@ export class JobsDomain {
     }
     const imageFileName = `${Date.now()}-${image.originalname}`;
       const imagePath = `./public/images/${imageFileName}`;
-    
-      //await fs.writeFile(imagePath, image);
       return imagePath;
   }
 
@@ -76,20 +78,9 @@ export class JobsDomain {
   async deleteJob(jobId: mongoose.Types.ObjectId): Promise<void> {
     const job = await this.findJobById(jobId);
     if (job) {
-        // await this.deleteImage(job.image);
         await this.jobsService.deleteJob(jobId );
       }
     }
-
-  async updateJobWithImage(jobId: mongoose.Types.ObjectId, jobData: jobData, image: Express.Multer.File): Promise<Job> {
-    // let ret = await this.findJobById(jobId);
-    // if (!ret) {
-    //     return null;
-    // }
-    // await this.deleteImage(ret.image);
-    // jobData.image = await this.createImage(image);
-    return await this.jobsService.updateJob(jobId, jobData);
-  }
 
   async getJobsById(jobId: mongoose.Types.ObjectId []): Promise<Job[]> {
     let jobs: Job[] = [];
@@ -104,13 +95,23 @@ export class JobsDomain {
     return await this.jobsService.findJobById(jobId);
   }
 
-  async findAllJobs(): Promise<Job[]> {
+  async findAllJobs(): Promise<JobId[]> {
     return await this.jobsService.findAllJobs();
   }
 
 
   async getEmployerJobs(employerId: string): Promise<Job[]> {
     return await this.jobsService.getEmployerJobs(employerId);
+  }
+
+  async addJobSeeker(email: string, jobData: JobId): Promise<boolean> {
+    const job = await this.findJobById(jobData._id);
+    if (!job) {
+      return false;
+    }
+    job.interested_jobseekers.push(email);
+    this.updateJob(jobData._id, job);
+    return true;
   }
 
 }

@@ -3,6 +3,7 @@ import Link from "next/link";
 import { userParam } from "./communication/user";
 import { userEnum } from "./communication/global";
 import { useRouter } from "next/navigation";
+import Image from 'next/image';
 
 export default function Login () {
 
@@ -29,7 +30,9 @@ export default function Login () {
     <>
     <div className="flex min-h-full flex-1 flex-col justify-center px-6 py-12 lg:px-8">
         <div className="sm:mx-auto sm:w-full sm:max-w-sm">
-          <img
+          <Image
+            width={200}
+            height={200}
             className="mx-auto h-20 w-auto sm:h-32 rounded-xl"
             src="/logo.png"
             alt="Your Company"

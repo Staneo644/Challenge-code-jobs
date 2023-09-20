@@ -36,11 +36,13 @@ export class EmployersDomain implements IEmployersDomain {
         if (!res) {
             return(null)
         }
+        console.log(employerData, email)
         if (employerData.email !== email) {
           const res2 = await this.enterprisesDomain.updateEnterpriseByEmail(email, employerData.email);
           if (!res2) {
             return(null)
           }
+          console.log(res2)
           const ret = await this.getEmployer(email);
           const res3 = await this.jobsDomain.updateJobEmail(ret.jobs, employerData.email);
           if (!res3) {
@@ -85,17 +87,6 @@ export class EmployersDomain implements IEmployersDomain {
         return null;
       }
       const fs = require('fs');
-
-    //   fs.writeFileSync('image_test.png', jobData.imageBuffer);
-    //   const sharp = require('sharp');
-
-    //   // Analyse les métadonnées de l'image
-    //   sharp('./image_test.jpg').metadata((err, metadata) => {
-    //     if (err) {
-    //       console.error(err);
-    //     } else {
-    //       console.log('Métadonnées de l\'image :', metadata);
-    //     }});
     
          const jobId:JobId = await this.jobsDomain.createJob(jobData);
          ret.jobs.push(jobId._id);

@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { Enterprise, enterpriseModel } from '../../core/enterprises/enterprise.entity';
+import { Enterprise } from '../../core/enterprises/enterprise.entity';
 import { NotFoundException } from '@nestjs/common';
 import { EnterprisesService } from './enterprises.service';
 
@@ -10,7 +10,6 @@ export class EnterprisesDomain {
   async createEnterprise(enterpriseData: Enterprise): Promise<Enterprise | null> {
     const res = await this.isEnterprise(enterpriseData.title);
     if (res) {
-        //throw new NotFoundException(`Entreprise avec le nom ${enterpriseData.title} déjà existante`);
         return(null)
     }
     return this.enterpriseService.createEnterprise(enterpriseData);
