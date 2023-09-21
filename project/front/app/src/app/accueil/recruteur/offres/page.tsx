@@ -27,34 +27,22 @@ export default function Home() {
     const [email, setEmail] = useState('')
     
     
-    const getJobList = () => {
-      getEmployerJobs(email).then((data) => {
-        console.log(data);
-        setJobList(data ?? []);
-      })};
+  
     
-
-
+    
+    
     useEffect(() => {
       if (email === '') {
         return
       }
-      getJobList()
+    
+      getEmployerJobs(email).then((data) => {
+        setJobList(data ?? []);})
     }, [email])
     
     
     useEffect(() => {
-      const url = `${pathname}?${searchParams}`
-      console.log(url)
-      console.log(searchParams.get('email'))
-      if (searchParams.get('email') === null) {
-        window.location.href = 'http://localhost:8080'
-      }
       setEmail(searchParams.get('email') ?? 'null')
-      console.log(searchParams.get('email') ?? 'null')
-      
-      
-      
     }, [pathname, searchParams])
     
  

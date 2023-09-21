@@ -57,9 +57,8 @@ export const Template: React.FC<TemplateProps> = ({ children }) => {
 
   useEffect(() => {
     const url = `${pathname}?${searchParams}`
-    console.log(url)
-    console.log(pathname)
     setEmail(searchParams.get('email'));
+    console.log("email is : " + searchParams.get('email'))
 
     if (pathname.startsWith('/accueil/recruteur') === true ) {
       setNavigation(navigationEmployer);
@@ -68,7 +67,6 @@ export const Template: React.FC<TemplateProps> = ({ children }) => {
       setNavigation(navigationJobSeeker);
     }
     userParam(searchParams.get('email')??'null').then((data) => {
-      console.log("UTILISATEUR" + data);
       if (!((data === userEnum.isEmployer && pathname.startsWith('/accueil/recruteur')) || (data === userEnum.isJobSeeker && pathname.startsWith('/accueil/candidat') ))) {
         router.push('/')
       }
@@ -80,7 +78,6 @@ export const Template: React.FC<TemplateProps> = ({ children }) => {
   useEffect(() => {
 
     for (let i = 0; i < navigation.length; i++) {
-      console.log(pathname + ' --  ' + ('/accueil' + navigation[i].link) )
     if (pathname === ('/accueil' + navigation[i].link)) {
       let temp = navigation;
       temp[i].current = true;

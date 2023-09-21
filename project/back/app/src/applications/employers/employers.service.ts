@@ -16,7 +16,6 @@ export class EmployersService {
     } 
   
     async updateEmployer(email: string, employerData: Partial<Employer>): Promise<Employer> {
-      console.log(employerData, email)
       return await EmployerModel.findOneAndUpdate(
         { email },
         employerData

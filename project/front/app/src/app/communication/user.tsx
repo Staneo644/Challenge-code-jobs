@@ -9,8 +9,8 @@ export const createUser = async (employerData:EmployerData | jobSeekerData):Prom
       if (response.status !== 201) {
         throw new Error(`Erreur HTTP : ${response.status} - ${response.statusText}`);
       }
-        console.log("created user " + employerData.email + " : " + response.data)
-      console.log(response.data)
+        console.log("created user " + employerData.email + " : ")
+        console.log(response.data)
       if (response.data === "") {
         return userEnum.notExist;
       }
@@ -25,7 +25,8 @@ export const createUser = async (employerData:EmployerData | jobSeekerData):Prom
 export const userParam = async (email:string) => {
     console.log("searching for user " + email)
     const user = await axios.get(`${apiUrl}/users/${email}`);
-    console.log("found user " + email + " : " + user.data)
+    console.log("found user " + email + " : ")
+    console.log( user.data)
     if (user.data.length !== 0) {
         if (user.data === userEnum.isEmployer) 
             return userEnum.isEmployer;

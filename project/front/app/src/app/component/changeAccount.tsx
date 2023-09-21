@@ -22,10 +22,7 @@ export default function ChangeAccount(is_employer: boolean) {
   
   useEffect(() => {
     const url = `${pathname}?${searchParams}`
-    console.log(url)
-    console.log(searchParams.get('email'))
     setEmail(searchParams.get('email') ?? 'null')
-    console.log(searchParams.get('email') ?? 'null')
   }, [])
 
 
@@ -35,7 +32,6 @@ export default function ChangeAccount(is_employer: boolean) {
             if (response) {
                 setName(response.name);
                 setSurname(response.surname);
-                console.log(response);
             }
         });
         } else {

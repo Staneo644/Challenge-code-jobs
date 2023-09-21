@@ -36,13 +36,11 @@ export class EmployersDomain implements IEmployersDomain {
         if (!res) {
             return(null)
         }
-        console.log(employerData, email)
         if (employerData.email !== email) {
           const res2 = await this.enterprisesDomain.updateEnterpriseByEmail(email, employerData.email);
           if (!res2) {
             return(null)
           }
-          console.log(res2)
           const ret = await this.getEmployer(email);
           const res3 = await this.jobsDomain.updateJobEmail(ret.jobs, employerData.email);
           if (!res3) {

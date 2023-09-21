@@ -63,7 +63,6 @@ export class EnterprisesDomain implements IEnterprisesDomain {
 
   async deleteEnterprise(email: string): Promise<void> {
     const listEnterprises = await this.enterpriseService.getEnterprisesByEmail(email);
-    console.log(listEnterprises);
     for (const enterprise of listEnterprises) {
       this.deleteEnterpriseTitle(enterprise.title);
     }

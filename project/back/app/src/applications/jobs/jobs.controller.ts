@@ -1,11 +1,8 @@
 import { Controller, Res } from '@nestjs/common';
-import { Post, Put, Delete, Param, Body, Get, UploadedFile } from '@nestjs/common';
+import { Post, Put, Delete, Param, Body, Get } from '@nestjs/common';
 import { JobsDomain } from './jobs.domain';
 import * as mongoose from 'mongoose';
 import { Job, JobId, jobData } from 'src/core/jobs/job.entity';
-import { FileInterceptor } from '@nestjs/platform-express';
-import { UseInterceptors } from '@nestjs/common';
-import { createReadStream } from 'fs';
 
 @Controller('jobs')
 export class JobsController {
@@ -19,14 +16,15 @@ export class JobsController {
 
     @Get(':jobId')
     async findJobById( @Param('jobId') jobId: mongoose.Types.ObjectId, @Res() res) {
+      console.log('GET request received for job ', jobId)
       const ret = await this.jobsService.findJobById(jobId).then((job) => {
       return job;})
     }
 
     @Get('image/:jobId')
-    async findJobImageById( @Param('jobId') jobId: mongoose.Types.ObjectId, @Res() res) { 
+    async findJobImageById( @Param('jobId') jobId: mongoose.Types.ObjectId, @Res() res) {
+      console.log('GET request received for job image ', jobId)
       const ret = await this.jobsService.findJobById(jobId).then((job) => {
-        console.log(job.imageType)
         res.contentType(job.imageType);
         res.send(job.imageBuffer);
 

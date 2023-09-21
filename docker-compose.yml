@@ -11,10 +11,8 @@ services:
       - db
     build:
       context: ./project/back
-    environment:
-      DATABASEIP: db
     networks:
-      - networkjob
+      - networksjob
     restart: unless-stopped
 
   front:
@@ -25,7 +23,7 @@ services:
     build:
       context: ./project/front
     networks:
-      - networkjob
+      - networksjob
     restart: unless-stopped
     ports:
       - "8080:8080"
@@ -33,17 +31,16 @@ services:
   db:
     init: true
     container_name: db
-    image: mongo:latest
+    build:
+      context: ./project/database
     ports:
       - "27017:27017"
     networks:
-      - networkjob
-    volumes:
-      - db_data:/data/db
+      - networksjob
+
       
 volumes:
   db_data:
 
 networks:
-  networkjob:
-    driver: bridge
+  networksjob:

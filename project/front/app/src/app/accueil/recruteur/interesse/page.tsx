@@ -75,7 +75,6 @@ export default function Home() {
     
     const getJobList = () => {
       getEmployerJobs(email).then((data) => {
-        console.log(data);
         setJobList(data ?? []);
         setShowCandidates(new Array(data?.length ?? 0).fill(false))
       })};
@@ -121,8 +120,6 @@ export default function Home() {
                     continue
                 }
                 getJobSeeker(jobList[i].interested_jobseekers[j]).then((data) => {
-            
-                    console.log(data)
                     if (data) {
                         const newArray = [...candidateParam];
                         newArray.push(data);

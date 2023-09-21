@@ -67,12 +67,10 @@ export function JobListFunction  () {
     const file = acceptedFiles[0];
     setIsLoading(true);
     setImageType(file.type);
-    console.log(file);
     setTimeout(() => {
       setIsLoading(false);
       const reader = new FileReader();
       reader.onload = (e:any) => {
-        console.log(e.target.result);
         setImagePreview(e.target.result);
       };
       reader.readAsDataURL(file);
@@ -108,12 +106,12 @@ export function JobListFunction  () {
         name: name,
         employer_email: email,
         description: description,
+        interested_jobseekers: [],
         money: money,
         imageType: imageType,
         imageBuffer: imagePreview,
         status: jobData.status
       }).then((data) => {
-        console.log(data);
         reload();
         closeCard();
       });
@@ -124,11 +122,11 @@ export function JobListFunction  () {
         employer_email: email,
         description: description,
         money: money,
+        interested_jobseekers: valueCard.interested_jobseekers,
         imageType: imageType,
         imageBuffer: imagePreview,
         status: jobData.status
       }).then((data) => {
-        console.log(data);
         reload();
         closeCard();
       }

@@ -56,7 +56,6 @@ export class JobSeekersDomain implements IJobSeekersDomain {
     }
 
     async addJob(JobId: string, email: string): Promise<JobSeeker> {
-        console.log(JobId, email)
         const ret = await this.getJobSeeker(email);
         if (!ret) {
             return(null)

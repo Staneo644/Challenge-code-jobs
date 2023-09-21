@@ -15,7 +15,6 @@ export class UsersDomain implements IUsersDomain{
 
     async createUser(user: Employer | JobSeeker): Promise<userEnum> {
         const res = await this.checkUser(user.email);
-        console.log(res)
         if (res === userEnum.notExist) {
             if ( 'enterprise_name' in user) {
                 const x = await this.employersDomain.createEmployer(user);

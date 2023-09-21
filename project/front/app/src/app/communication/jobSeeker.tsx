@@ -51,7 +51,8 @@ export const getJobSeeker = async (email:string) : Promise<jobSeekerData | null>
   try {
     const response = await axios.post(`${apiUrl}/jobs/${email}`, {jobData}
     );
-    console.log('Response:', response.data);
+    console.log('Response:')
+    console.log(response.data);
   } catch (error) {
     console.error('Erreur lors de l\'ajout de l\'emploi', error);
     throw error;

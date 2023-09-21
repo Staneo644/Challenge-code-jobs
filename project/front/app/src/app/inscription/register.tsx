@@ -48,10 +48,8 @@ export default function Register () {
       
       if (searchEnterprise) {
           createEnterprise({email_patron: email, title: enterpriseName}).then((data) => {
-            console.log(data)
             if (data === true) {
               createUser({email: email, name: name, surname: surname, enterprise_name: enterpriseName}).then((dataEmployer) => {
-                console.log(dataEmployer)
                 if (dataEmployer === userEnum.isEmployer) {
                 router.push('/accueil/recruteur?email='+email)
                 }
@@ -67,7 +65,6 @@ export default function Register () {
     if (!searchEnterprise && isEmployer) {
       getEnterprise().then((data) => {
         setEntrepriseList(data)
-        console.log(enterpriseList)
       })
       setSearchEnterprise(true)
       return

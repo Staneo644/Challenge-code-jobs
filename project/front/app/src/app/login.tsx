@@ -14,7 +14,8 @@ export default function Login () {
   const connect = (event:any) => {
     event.preventDefault();
     userParam(email).then((data) => {
-      console.log(data)
+      if (data !== userEnum.notExist)
+        console.log("Login success");
       if (data === userEnum.isEmployer) {
         router.push('/accueil/recruteur?email='+email)
       }
