@@ -21,11 +21,11 @@ export class JobSeekersController {
     return this.jobSeekersService.getJobSeeker(email);
   }
 
-  @Post(':email')
+  @Post(':email/:job')
   @UsePipes(ValidationPipe)
-  async seeing_job( @Param('email') email: string, @Body() JobId: any) {
-    console.log('POST request received to validate job ', JobId.jobData)
-    return this.jobSeekersService.addJob(JobId.jobData, email);
+  async seeing_job( @Param('email') email: string, @Param('job') JobId: string) {
+    console.log('POST request received to validate job ', JobId)
+    return this.jobSeekersService.addJob(JobId, email);
   }
 
   @Get('jobs/:email')

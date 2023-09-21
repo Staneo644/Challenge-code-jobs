@@ -25,7 +25,7 @@ export class JobSeekersDomain implements IJobSeekersDomain {
     }
 
     async getAllJobSeekers(): Promise<JobSeeker[]> {
-        return this.jobSeekerService.findAllJobSeeker();
+        return await this.jobSeekerService.findAllJobSeeker();
     }
   
     async updateJobSeeker(email: string, JobSeekerData: Partial<JobSeeker>): Promise<JobSeeker> {
@@ -33,7 +33,7 @@ export class JobSeekersDomain implements IJobSeekersDomain {
         if (!ret) {
             return(null)
         }
-        return this.jobSeekerService.updateJobSeeker(email, JobSeekerData);
+        return await this.jobSeekerService.updateJobSeeker(email, JobSeekerData);
     }
 
     async isJobSeeker(email: string): Promise<boolean> {
@@ -60,29 +60,26 @@ export class JobSeekersDomain implements IJobSeekersDomain {
         if (!ret) {
             return(null)
         }
-        let job:Types.ObjectId = new mongoose.Types.ObjectId(JobId);
-        ret.job_seeing.push(job);
-        return this.updateJobSeeker(email, ret)
+        ret.job_seeing.push(new Types.ObjectId(JobId));
+        return await this.updateJobSeeker(email, ret)
     }
 
     async getJobs(email: string): Promise<JobId[]> {
         const jobSeeker = await this.getJobSeeker(email);
         if (!jobSeeker) {
-            return null; // Vous pouvez retourner null si le jobSeeker est null
+            return null;
         }
-    
+
         let result = [];
         const allJobs = await this.jobDomain.findAllJobs();
         for (let j = 0; j < allJobs.length; j++) {
-            let jobExists = false; // Ajoutez une variable pour vérifier si le job existe dans job_seeing
-    
+            let jobExists = false;
             for (let i = 0; i < jobSeeker.job_seeing.length; i++) {
-                if (jobSeeker.job_seeing[i] && jobSeeker.job_seeing[i].equals(allJobs[j]._id)) {
-                    jobExists = true; // Le job existe dans job_seeing
-                    break; // Pas besoin de continuer à vérifier les autres jobs_seeing
+                if (jobSeeker.job_seeing[i].equals(allJobs[j]._id)) {
+                    jobExists = true; 
+                    break;
                 }
             }
-    
             if (!jobExists) {
                 result.push(allJobs[j]);
             }

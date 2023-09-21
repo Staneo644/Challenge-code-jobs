@@ -39,12 +39,12 @@ export default function Home() {
     const [actualDate, setActualDate] = useState(new Date());
 
 
-    const showNextJob = () => {
+    const showNextJob = async () => {
       if (jobs === undefined) {
         return;
       }
 
-      addSeeingJob(email, jobs[currentJobIndex]._id);
+      const ret = await addSeeingJob(email, (jobs[currentJobIndex])._id);
       if (currentJobIndex < jobs.length - 1) {
 
 

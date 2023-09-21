@@ -28,7 +28,10 @@ export default function Home() {
     
     
   
-    
+    const getJobList = () => {
+      getEmployerJobs(email).then((data) => {
+        setJobList(data ?? []);})
+    }
     
     
     useEffect(() => {

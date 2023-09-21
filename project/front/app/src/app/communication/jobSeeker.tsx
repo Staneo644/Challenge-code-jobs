@@ -49,7 +49,7 @@ export const getJobSeeker = async (email:string) : Promise<jobSeekerData | null>
  export const addSeeingJob = async (email:string, jobData: string) => {
   console.log("adding job " + jobData + " of " + email)
   try {
-    const response = await axios.post(`${apiUrl}/jobs/${email}`, {jobData}
+    const response = await axios.post(`${apiUrl}/jobseekers/${email}/${jobData}`, {}
     );
     console.log('Response:')
     console.log(response.data);
