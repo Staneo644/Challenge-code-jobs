@@ -3,7 +3,7 @@
 import React, { use } from 'react';
 import {Template} from '@/app/component/header';
 import '../../../globals.css'
-import ChangeAccount from '@/app/component/ChangeAccount';
+import ChangeAccount from '@/app/component/changeAccount';
 import { usePathname, useSearchParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
 

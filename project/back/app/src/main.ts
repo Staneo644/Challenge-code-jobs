@@ -27,7 +27,7 @@ async function bootstrap() {
 
 
   try {
-    await mongoose.connect('mongodb://0.0.0.0:27017/test', {});
+    await mongoose.connect('mongodb://localhost:27017', {});
 
     await app.listen(3000);
     console.log(`Application started and database connected. Listening on port 3000 `);

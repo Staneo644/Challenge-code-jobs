@@ -3,7 +3,7 @@
 import React, { use } from 'react';
 import {Template} from '@/app/component/header';
 import '../../../globals.css'
-import ChangeAccount from '@/app/component/ChangeAccount';
+import ChangeAccount from '@/app/component/changeAccount';
 
 export default function Home() {
     return(

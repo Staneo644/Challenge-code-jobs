@@ -25,7 +25,6 @@ const navigationEmployer:Navigation[] = [
   { name: 'Mes offres', link: '/recruteur/offres', current: false },
   { name: 'Interessés', link: '/recruteur/interesse', current: false },
   { name: 'Mon Compte', link: '/recruteur/compte', current: false },
-  { name: 'Mon entreprise', link: '/recruteur/entreprise', current: false },
 ]
 
 const navigationJobSeeker:Navigation[] = [
@@ -75,17 +74,26 @@ export const Template: React.FC<TemplateProps> = ({ children }) => {
       }
     });
 
-    for (let i = 0; i < navigation.length; i++) {
-      if (pathname.startsWith('/accueil/' + navigation[i].link)) {
-        navigation[i].current = true;
-        setNamePage(navigation[i].name);
-      } else {
-        navigation[i].current = false;
-      }
-    }
-
+    
   }, [pathname, searchParams])
-    return (
+
+  useEffect(() => {
+
+    for (let i = 0; i < navigation.length; i++) {
+      console.log(pathname + ' --  ' + ('/accueil' + navigation[i].link) )
+    if (pathname === ('/accueil' + navigation[i].link)) {
+      let temp = navigation;
+      temp[i].current = true;
+      setNavigation(temp)
+      setNamePage(navigation[i].name);
+    } else {
+      let temp = navigation
+      temp[i].current = false;
+      setNavigation(temp)
+    }
+  }}, [navigation]
+  )
+  return (
     <>
     
     <div className="min-h-full">
@@ -132,8 +140,7 @@ export const Template: React.FC<TemplateProps> = ({ children }) => {
                       className="relative rounded-full bg-gray-800 p-1 text-gray-400 hover:text-white focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800"
                     >
                       <span className="absolute -inset-1.5" />
-                      <span className="sr-only">View notifications</span>
-                      <BellIcon className="h-6 w-6" aria-hidden="true" />
+                      
                     </button>
 
                  
@@ -223,8 +230,7 @@ export const Template: React.FC<TemplateProps> = ({ children }) => {
                     className="relative ml-auto flex-shrink-0 rounded-full bg-gray-800 p-1 text-gray-400 hover:text-white focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800"
                   >
                     <span className="absolute -inset-1.5" />
-                    <span className="sr-only">View notifications</span>
-                    <BellIcon className="h-6 w-6" aria-hidden="true" />
+                   
                   </button>
                 </div>
                 <div className="mt-3 space-y-1 px-2">
@@ -252,7 +258,7 @@ export const Template: React.FC<TemplateProps> = ({ children }) => {
 
       <header className="bg-white shadow static">
         <div className="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
-          <h1 className="text-3xl font-bold tracking-tight text-gray-900">Dashboard</h1>
+          <h1 className="text-3xl font-bold tracking-tight text-gray-900">{namePage}</h1>
         </div>
       </header>
       <main>

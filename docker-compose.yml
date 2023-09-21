@@ -33,22 +33,16 @@ services:
   db:
     init: true
     container_name: db
-    build:
-      context: ./project/database
+    image: mongo:latest
     ports:
       - "27017:27017"
     networks:
       - networkjob
-    # volumes:
-      # - db_data:/data/db
+    volumes:
+      - db_data:/data/db
       
 volumes:
   db_data:
-    driver: local
-    driver_opts:
-      type: none
-      device: ./project/database/data
-      o: bind
 
 networks:
   networkjob:

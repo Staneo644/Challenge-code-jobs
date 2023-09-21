@@ -9,7 +9,6 @@ endif
 
 
 # --> PROGRAM --------------------------------------------------------------------
-PROGRAM = FT_TRANSCENDANCE
 AUTHOR = ajossera
 
 # ~~~~~~~~~~~~~~~~ SOURCES ~~~~~~~~~~~~~~~~
@@ -61,7 +60,7 @@ endif
 
 # # --> RULES ----------------------------------------------------------------------
 
-all:   header start
+all:   header frontend
 
 # ~~~~~~~~~~~~~~~~~ BUILD ~~~~~~~~~~~~~~~~~
 
@@ -80,13 +79,13 @@ create: build
 # ~~~~~~~~~~~~~~~~ START ~~~~~~~~~~~~~~~~
 
 database :
-	docker-compose up db
+	docker-compose up -d db
 
-adminer :
-	docker-compose up adminer
+backend:database
+	cd ./project/back/app && nohup npm run start > /dev/null 2>&1 &
 
-back: 
-	docker-compose up back
+frontend:backend
+	cd project/front/app && npm run dev
 
 start: build
 	# printf "%-62b%b" "$(BOLD)$(GREEN)Starting$(END) containers"
