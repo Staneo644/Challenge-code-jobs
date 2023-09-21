@@ -11,4 +11,4 @@ voici un schema UML de la base de donnée
 
 Les applications à installer sont Docker et NodeJs
 
-Pour lancer le site, il suffit de faire la commande "make" à la racine du projet
+Pour lancer le site, il suffit de faire la commande "make database" à la racine du projet, puis aller dans le dossier project/back/app et faire "npm run start" et aller dans le dossier project/front/app et faire npm run start
