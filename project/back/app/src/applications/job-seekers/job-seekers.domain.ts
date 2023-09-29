@@ -1,13 +1,9 @@
 import { Injectable } from '@nestjs/common';
-import { JobSeeker } from '../../core/job-seekers/job-seeker.entity';
+import { JobSeeker } from './job-seeker.entity';
 import { JobSeekersService } from './job-seekers.service';
-import { NotFoundException } from '@nestjs/common';
-import { ObjectId } from 'mongoose';
-import { Types } from 'mongoose';
 import { JobsDomain } from '../jobs/jobs.domain';
-import { JobId } from 'src/core/jobs/job.entity';
-import { IJobSeekersDomain } from '../../core/job-seekers/job-seeker.interfaces';
-const mongoose = require('mongoose');
+import { IJobSeekersDomain } from '../../interfaces/job-seekers/job-seeker.interfaces';
+import { Job } from '../jobs/job.entity';
 
 @Injectable()
 export class JobSeekersDomain implements IJobSeekersDomain {
@@ -16,75 +12,118 @@ export class JobSeekersDomain implements IJobSeekersDomain {
       ) {}
 
 
-    async createJobSeeker(JobSeekerData: JobSeeker): Promise<JobSeeker> {
+    async createJobSeeker(JobSeekerData: any): Promise<boolean> {
+        try {
         const ret = await this.isJobSeeker(JobSeekerData.email);
         if (ret) {
-            return(null)
+            return(false)
         }
-        return this.jobSeekerService.createJobSeeker(JobSeekerData);
+        return (await this.jobSeekerService.createJobSeeker(JobSeekerData) !== null);
+        } catch (e) {
+            console.log(e)
+            return(false)
+        }
     }
 
-    async getAllJobSeekers(): Promise<JobSeeker[]> {
-        return await this.jobSeekerService.findAllJobSeeker();
+    async getJobSeekers(): Promise<JobSeeker[]> {
+        return await this.jobSeekerService.getJobSeekers();
     }
   
-    async updateJobSeeker(email: string, JobSeekerData: Partial<JobSeeker>): Promise<JobSeeker> {
-        const ret = this.isJobSeeker(JobSeekerData.email);
-        if (!ret) {
-            return(null)
+    async updateJobSeeker(email: string, JobSeekerData: Partial<JobSeeker>): Promise<boolean> {
+        try {
+            const ret = await this.getJobSeekerByEmail(email);
+            if (!ret) {
+                return(false)
+            }
+            return ((await this.jobSeekerService.updateJobSeeker(ret.id, JobSeekerData)).affected > 0);
         }
-        return await this.jobSeekerService.updateJobSeeker(email, JobSeekerData);
+        catch (e) {
+            console.log(e)
+            return(false)
+        }
     }
 
     async isJobSeeker(email: string): Promise<boolean> {
-        const ret = await this.jobSeekerService.findOneJobSeeker(email);
+        const ret = await this.getJobSeekerByEmail(email);
         if (!ret) {
             return false;
           }
         return true;
     }
   
-    async deleteJobSeeker(email: string) : Promise<JobSeeker>{
-        const ret = await this.getJobSeeker(email);
-        for (let i = 0; i < ret.job_seeing.length; i++) {
-            await this.jobDomain.deleteJob(ret.job_seeing[i]);
+    async deleteJobSeeker(email: string) : Promise<boolean>{
+        try {
+
+            const ret = await this.getJobSeekerByEmail(email);
+            if (!ret) {
+                return false;
+            }
+            return ((await this.jobSeekerService.deleteJobSeeker(ret.id)).affected > 0);
         }
-        return await this.jobSeekerService.removeJobSeeker(email); 
-    }  
-    async getJobSeeker(email: string): Promise<JobSeeker | null> {
-      return this.jobSeekerService.findOneJobSeeker(email);
+        catch (e) {
+            console.log(e)
+            return false;
+        }
+        
+    } 
+
+    async getJobSeekerByEmail(email: string): Promise<JobSeeker> {
+      return this.jobSeekerService.getJobSeekerByEmail(email);
     }
 
-    async addJob(JobId: string, email: string): Promise<JobSeeker> {
-        const ret = await this.getJobSeeker(email);
-        if (!ret) {
-            return(null)
+    async addJob(JobId: number, email: string, validate:boolean): Promise<boolean> {
+        try {
+        const ret = await this.getJobSeekerByEmail(email);
+        const job = await this.jobDomain.getJobById(JobId);
+        if (!ret || !job) {
+            return(false)
         }
-        ret.job_seeing.push(new Types.ObjectId(JobId));
+        if (!ret.jobSeeing) {
+            ret.jobSeeing = [];
+        }
+        
+        ret.jobSeeing.push(job.id);
+        if (validate) {
+            if (!job.interested_jobseekers) {
+                job.interested_jobseekers = [];
+            }
+            job.interested_jobseekers.push(ret);
+            this.jobDomain.updateJob(JobId, job);
+        }
         return await this.updateJobSeeker(email, ret)
+        } catch (e) {
+            console.log(e)
+            return(false)
+        }
     }
 
-    async getJobs(email: string): Promise<JobId[]> {
-        const jobSeeker = await this.getJobSeeker(email);
-        if (!jobSeeker) {
-            return null;
-        }
+    async getJobs(email: string): Promise<Job[]> {
+        try {
+            const jobSeeker = await this.getJobSeekerByEmail(email);
+            if (!jobSeeker) {
+                return null;
+            }
 
-        let result = [];
-        const allJobs = await this.jobDomain.findAllJobs();
-        for (let j = 0; j < allJobs.length; j++) {
-            let jobExists = false;
-            for (let i = 0; i < jobSeeker.job_seeing.length; i++) {
-                if (jobSeeker.job_seeing[i].equals(allJobs[j]._id)) {
-                    jobExists = true; 
-                    break;
+            let result = [];
+            const allJobs = await this.jobDomain.getJobs();
+            for (let j = 0; j < allJobs.length; j++) {
+                let jobExists = false;
+                if (jobSeeker.jobSeeing) {
+                    for (let i = 0; i < jobSeeker.jobSeeing.length; i++) {
+                        if (jobSeeker.jobSeeing[i] === (allJobs[j].id)) {
+                            jobExists = true; 
+                            break;
+                        }
+                    }
+                }
+                if (!jobExists) {
+                    result.push(allJobs[j]);
                 }
             }
-            if (!jobExists) {
-                result.push(allJobs[j]);
-            }
-        }
-    
-        return result;
+            return result;
+    } catch (e) {
+        console.log(e)
+        return(null)
+    }
     }
   }

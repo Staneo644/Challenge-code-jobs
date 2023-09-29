@@ -11,9 +11,18 @@ import { JobsService } from '../jobs/jobs.service';
 import { EnterprisesService } from '../enterprises/enterprises.service';
 import { EnterprisesDomain } from '../enterprises/enterprises.domain';
 import { JobsDomain } from '../jobs/jobs.domain';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { Employer } from '../employers/employer.entity';
+import { JobSeeker } from '../job-seekers/job-seeker.entity';
+import { JobsModule } from '../jobs/jobs.module';
+import { Job } from '../jobs/job.entity';
+import { Enterprise } from '../enterprises/enterprise.entity';
 
 
 @Module({
+  imports: [EmployersModule, JobSeekersModule, TypeOrmModule.forFeature([Employer]), TypeOrmModule.forFeature([JobSeeker]), JobsModule, TypeOrmModule.forFeature([JobSeeker])
+    ,TypeOrmModule.forFeature([Job]), TypeOrmModule.forFeature([Enterprise])
+],
   controllers: [UsersController],
   providers: [UsersDomain, EmployersDomain, 
     JobSeekersDomain, EmployersService, 

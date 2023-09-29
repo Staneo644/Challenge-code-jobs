@@ -1,51 +1,39 @@
 import { Controller, Res } from '@nestjs/common';
-import { Post, Put, Delete, Param, Body, Get } from '@nestjs/common';
+import { Post, Put, Param, Body, Get, Delete } from '@nestjs/common';
 import { JobsDomain } from './jobs.domain';
-import * as mongoose from 'mongoose';
-import { Job, JobId, jobData } from 'src/core/jobs/job.entity';
+import { Job } from './job.entity';
 
 @Controller('jobs')
 export class JobsController {
     constructor(private readonly jobsService: JobsDomain) {}
 
     @Get()
-    findAllJobs() {
+    getJobs() {
       console.log('GET request received for all jobs')
-      return this.jobsService.findAllJobs();
+      return this.jobsService.getJobs();
     }
 
     @Get(':jobId')
-    async findJobById( @Param('jobId') jobId: mongoose.Types.ObjectId, @Res() res) {
+    async getJobById( @Param('jobId') jobId: string, @Res() res) {
       console.log('GET request received for job ', jobId)
-      const ret = await this.jobsService.findJobById(jobId).then((job) => {
-      return job;})
+      return await this.jobsService.getJobById(Number(jobId))
     }
 
-    @Get('image/:jobId')
-    async findJobImageById( @Param('jobId') jobId: mongoose.Types.ObjectId, @Res() res) {
-      console.log('GET request received for job image ', jobId)
-      const ret = await this.jobsService.findJobById(jobId).then((job) => {
-        res.contentType(job.imageType);
-        res.send(job.imageBuffer);
+    @Delete(':jobId')
+    deleteJob(@Param('jobId') jobId: string) {
+    console.log('DELETE request received for job ', jobId)
+    return this.jobsService.deleteJob(Number(jobId));
+  }
 
-      })
-    }
-
-  
     @Post(':email')
-    async validateJob( @Param('email') email: string, @Body() jobData: JobId) {
-      console.log('POST request received to validate job ', jobData)
-      return this.jobsService.addJobSeeker(email, jobData);
+    createJob( @Param ('email') email:string, @Body() jobData: Job) {
+      console.log('POST request received for job ', jobData);
+      return this.jobsService.createJob(jobData, email);
     }
-
-
   
     @Put(':jobId')
-    updateJob( @Param('jobId') jobId: mongoose.Types.ObjectId, @Body() jobData: jobData) {
+    updateJob( @Param('jobId') jobId: string, @Body() jobData: Job) {
       console.log('PUT request received for job ', jobId)
-      return this.jobsService.updateJob(jobId, jobData);
+      return this.jobsService.updateJob(Number(jobId), jobData);
     }
-
-
-
 }

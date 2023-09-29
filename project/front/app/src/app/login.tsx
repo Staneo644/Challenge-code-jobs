@@ -1,35 +1,34 @@
 import { useState } from "react";
 import Link from "next/link";
-import { userParam } from "./communication/user";
+import { getUser } from "./communication/user";
 import { userEnum } from "./communication/global";
 import { useRouter } from "next/navigation";
-import Image from 'next/image';
+import Image from "next/image";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
-export default function Login () {
-
-  const [email, setEmail] = useState('');
+export default function Login() {
+  const [email, setEmail] = useState("");
   const [unValidEmail, setUnValidEmail] = useState(false);
   const router = useRouter();
 
-  const connect = (event:any) => {
+  const connect = (event: any) => {
     event.preventDefault();
-    userParam(email).then((data) => {
-      if (data !== userEnum.notExist)
-        console.log("Login success");
-      if (data === userEnum.isEmployer) {
-        router.push('/accueil/recruteur?email='+email)
+    getUser(email).then((data) => {
+      if (data && data !== userEnum.notExist) console.log("Login success");
+      if (data && data === userEnum.isEmployer) {
+        router.push("/accueil/recruteur?email=" + email);
+      } else if (data && data === userEnum.isJobSeeker) {
+        router.push("/accueil/candidat?email=" + email);
       }
-      else if (data === userEnum.isJobSeeker) {
-        router.push('/accueil/candidat?email='+email)
-      }
-      else
-        setUnValidEmail(true)
-    })
-  }
+      if (data && data === userEnum.notExist) setUnValidEmail(true);
+    });
+  };
 
   return (
     <>
-    <div className="flex min-h-full flex-1 flex-col justify-center px-6 py-12 lg:px-8">
+      <ToastContainer />
+      <div className="flex min-h-full flex-1 flex-col justify-center px-6 py-12 lg:px-8">
         <div className="sm:mx-auto sm:w-full sm:max-w-sm">
           <Image
             width={200}
@@ -46,7 +45,10 @@ export default function Login () {
         <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
           <form className="space-y-6" action="#" method="POST">
             <div>
-              <label htmlFor="email" className="block text-sm font-medium leading-6 text-gray-900">
+              <label
+                htmlFor="email"
+                className="block text-sm font-medium leading-6 text-gray-900"
+              >
                 Adresse email
               </label>
               <div className="mt-2">
@@ -60,13 +62,12 @@ export default function Login () {
                   className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                 />
               </div>
-                {unValidEmail && 
-                  <div className="mt-2 text-sm text-red-600" id="email-error">
-                    Adresse email pas reconnue
-                  </div>
-                }
+              {unValidEmail && (
+                <div className="mt-2 text-sm text-red-600" id="email-error">
+                  Adresse email pas reconnue
+                </div>
+              )}
             </div>
-
 
             <div>
               <button
@@ -80,13 +81,16 @@ export default function Login () {
           </form>
 
           <p className="mt-10 text-center text-sm text-gray-500">
-            Pas inscrit ?{' '}
-            <Link href="/inscription" className="font-semibold leading-6 text-indigo-600 hover:text-indigo-500">
+            Pas inscrit ?{" "}
+            <Link
+              href="/inscription"
+              className="font-semibold leading-6 text-indigo-600 hover:text-indigo-500"
+            >
               Inscrit-toi dés maintenant
             </Link>
           </p>
         </div>
       </div>
     </>
-    )
+  );
 }

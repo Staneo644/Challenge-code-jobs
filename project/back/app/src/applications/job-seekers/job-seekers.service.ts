@@ -1,29 +1,37 @@
-import { Injectable } from '@nestjs/common';
-import { JobSeekerModel } from 'src/core/job-seekers/job-seeker.entity';
-import { JobSeeker } from 'src/core/job-seekers/job-seeker.entity';
+import { Injectable, NotFoundException } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository, DeleteResult, UpdateResult } from 'typeorm';
+import { JobSeeker } from './job-seeker.entity';
 
 @Injectable()
 export class JobSeekersService {
- 
+  constructor(
+    @InjectRepository(JobSeeker)
+    private readonly jobSeekerRepository: Repository<JobSeeker>,
+  ) {}
 
   async createJobSeeker(jobSeekerData: Partial<JobSeeker>): Promise<JobSeeker> {
-    const createdJobSeeker = new JobSeekerModel(jobSeekerData);
-    return createdJobSeeker.save();
+    const createdJobSeeker = this.jobSeekerRepository.create(jobSeekerData);
+    return await this.jobSeekerRepository.save(createdJobSeeker);
   }
 
-  async findAllJobSeeker(): Promise<JobSeeker[]> {
-    return JobSeekerModel.find().exec();
+  async getJobSeekers(): Promise<JobSeeker[]> {
+    return await this.jobSeekerRepository.find();
   }
 
-  async findOneJobSeeker(email: string): Promise<JobSeeker | null> {
-    return await JobSeekerModel.findOne({ email }).exec();
+  async getJobSeekerByEmail(email: string): Promise<JobSeeker> {
+    return await this.jobSeekerRepository.findOne({ where: { email } });
   }
 
-  async updateJobSeeker(email: string, jobSeekerData: Partial<JobSeeker>): Promise<JobSeeker | null> {
-    return JobSeekerModel.findOneAndUpdate({email}, jobSeekerData, { new: true }).exec();
+  async getJobSeekerById(id: number): Promise<JobSeeker> {
+    return await this.jobSeekerRepository.findOne({ where: { id } });
   }
 
-  async removeJobSeeker(email: string){
-    return await JobSeekerModel.findOneAndRemove({email}).exec();
+  async updateJobSeeker(id:number, jobSeekerData: Partial<JobSeeker>): Promise<UpdateResult> {
+    return await this.jobSeekerRepository.update(id, jobSeekerData);
+  }
+
+  async deleteJobSeeker(id: number): Promise<DeleteResult> {
+    return await this.jobSeekerRepository.delete(id);
   }
 }

@@ -1,32 +1,37 @@
-import { Fragment, useRef, useState } from 'react'
-import { Dialog, Transition } from '@headlessui/react'
-import { ExclamationTriangleIcon } from '@heroicons/react/24/outline'
-import { deleteUser } from '../communication/user';
-import { useRouter } from 'next/navigation';
-import { useEffect } from 'react';
-import { usePathname, useSearchParams } from 'next/navigation';
+import { Fragment, useRef, useState } from "react";
+import { Dialog, Transition } from "@headlessui/react";
+import { ExclamationTriangleIcon } from "@heroicons/react/24/outline";
+import { deleteUser } from "../communication/user";
+import { useRouter } from "next/navigation";
+import { useEffect } from "react";
+import { usePathname, useSearchParams } from "next/navigation";
 
 interface DestroyCardProps {
   onClose: () => void;
 }
 
-export default function DestroyCard({ onClose }: DestroyCardProps){
-  const [open, setOpen] = useState(true)
-  const [email, setEmail] = useState<string|null>()
-  const router = useRouter()
-  const pathname = usePathname()
-  const searchParams = useSearchParams()  
+export default function DestroyCard({ onClose }: DestroyCardProps) {
+  const [open, setOpen] = useState(true);
+  const [email, setEmail] = useState<string | null>();
+  const router = useRouter();
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
 
   useEffect(() => {
     const url = `${pathname}?${searchParams}`;
-    setEmail(searchParams.get('email'));
-  }, [pathname, searchParams])
+    setEmail(searchParams.get("email"));
+  }, [pathname, searchParams]);
 
-  const cancelButtonRef = useRef(null)
+  const cancelButtonRef = useRef(null);
 
   return (
     <Transition.Root show={open} as={Fragment}>
-      <Dialog as="div" className="relative z-10" initialFocus={cancelButtonRef} onClose={setOpen}>
+      <Dialog
+        as="div"
+        className="relative z-10"
+        initialFocus={cancelButtonRef}
+        onClose={setOpen}
+      >
         <Transition.Child
           as={Fragment}
           enter="ease-out duration-300"
@@ -54,15 +59,23 @@ export default function DestroyCard({ onClose }: DestroyCardProps){
                 <div className="bg-white px-4 pb-4 pt-5 sm:p-6 sm:pb-4">
                   <div className="sm:flex sm:items-start">
                     <div className="mx-auto flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-red-100 sm:mx-0 sm:h-10 sm:w-10">
-                      <ExclamationTriangleIcon className="h-6 w-6 text-red-600" aria-hidden="true" />
+                      <ExclamationTriangleIcon
+                        className="h-6 w-6 text-red-600"
+                        aria-hidden="true"
+                      />
                     </div>
                     <div className="mt-3 text-center sm:ml-4 sm:mt-0 sm:text-left">
-                      <Dialog.Title as="h3" className="text-base font-semibold leading-6 text-gray-900">
+                      <Dialog.Title
+                        as="h3"
+                        className="text-base font-semibold leading-6 text-gray-900"
+                      >
                         Supprimer le compte
                       </Dialog.Title>
                       <div className="mt-2">
                         <p className="text-sm text-gray-500">
-                          Êtes-vous sûr de vouloir supprimer votre compte ? Toutes vos données seront perdues et les entreprises que vous avez créé seront supprimées.
+                          Êtes-vous sûr de vouloir supprimer votre compte ?
+                          Toutes vos données seront perdues et les entreprises
+                          que vous avez créé seront supprimées.
                         </p>
                       </div>
                     </div>
@@ -72,7 +85,13 @@ export default function DestroyCard({ onClose }: DestroyCardProps){
                   <button
                     type="button"
                     className="inline-flex w-full justify-center rounded-md bg-red-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-red-500 sm:ml-3 sm:w-auto"
-                    onClick={() => {onClose(); if (email) deleteUser(email); router.push('/') }}
+                    onClick={() => {
+                      onClose();
+                      if (email)
+                        deleteUser(email).then((data) => {
+                          if (data && data === true) router.push("/");
+                        });
+                    }}
                   >
                     Supprimer
                   </button>
@@ -91,5 +110,5 @@ export default function DestroyCard({ onClose }: DestroyCardProps){
         </div>
       </Dialog>
     </Transition.Root>
-  )
+  );
 }

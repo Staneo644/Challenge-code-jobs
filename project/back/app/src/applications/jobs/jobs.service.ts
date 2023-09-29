@@ -1,38 +1,45 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { Job, JobId, JobModel } from '../../core/jobs/job.entity'; 
-import * as mongoose from 'mongoose';
+import { InjectRepository } from '@nestjs/typeorm';
+import { DeleteResult, Repository, UpdateResult } from 'typeorm';
+import { Job } from './job.entity';
 
 @Injectable()
 export class JobsService {
+  constructor(
+    @InjectRepository(Job)
+    private readonly jobRepository: Repository<Job>,
+  ) {}
 
-
-  async createJob( jobData: Job): Promise<any> {
-    const job = new JobModel(jobData);
-    return await job.save();
+  async createJob(jobData: Partial<Job>): Promise<Job> {
+    const job = this.jobRepository.create(jobData);
+    return await this.jobRepository.save(job);
   }
 
-  async updateJob( jobId: mongoose.Types.ObjectId, jobData: Job): Promise<JobId> {
-    return JobModel.findOneAndUpdate({ _id: jobId }, jobData, { new: true })
+  async updateJob(id: number, jobData: Partial<Job>): Promise<boolean> {
+    let job = await this.getJobById(id);
+    job.name = jobData.name;
+    job.description = jobData.description;
+    job.money = jobData.money;
+    job.status = jobData.status;
+    job.imageBuffer = jobData.imageBuffer;
+    this.jobRepository.save(job)
+    return true;
   }
 
-  async deleteJob(jobId: mongoose.Types.ObjectId): Promise<void> {
-    await JobModel.deleteOne({ _id: jobId }).exec();
-    }
-
-  async findJobById(jobId: mongoose.Types.ObjectId): Promise<JobId> {
-    try {
-      return await JobModel.findById(jobId).exec();
-    } catch (error) {
-      throw new NotFoundException('Job not found.');
-    }
+  async deleteJob(id: number): Promise<DeleteResult> {
+    return await this.jobRepository.delete(id);
   }
 
-  async findAllJobs(): Promise<JobId[]> {
-    return await JobModel.find().exec();
+  async getJobById(id: number): Promise<Job> {
+    return await this.jobRepository.findOne({
+      where: {id},
+      relations: ['interested_jobseekers', 'employer']
+    });
   }
 
-
-  async getEmployerJobs(employerId: string): Promise<Job[]> {
-    return await JobModel.find({ employer_id: employerId }).exec();
+  async getJobs(): Promise<Job[]> {
+    return await this.jobRepository.find(
+      {relations: ['interested_jobseekers', 'employer']}
+    );
   }
 }

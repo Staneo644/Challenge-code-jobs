@@ -1,68 +1,105 @@
-import axios from 'axios';
-import { EmployerData, apiUrl, jobData, jobDataId, UpdatableEmployerData } from './global';
+import axios from "axios";
+import {
+  EmployerData,
+  apiUrl,
+  jobData,
+  jobDataId,
+  UpdatableEmployerData,
+} from "./global";
+import { errorMessage } from "./global";
 
-export const getEmployer = async (email:string) => {
-  console.log("searching for employer " + email)
- try {
-  const response = await axios.get(`${apiUrl}/employers/${email}`);
-    
-    if (response.status !== 200) {
-      return null;
+export const getEmployer = async (
+  email: string,
+): Promise<EmployerData | null> => {
+  console.log("searching for employer " + email);
+  try {
+    const response = await axios.get(`${apiUrl}/employers/${email}`);
+
+    if (
+      response.data === null ||
+      response.data === undefined ||
+      response.status !== 200
+    ) {
+      return errorMessage(
+        "Erreur lors de la recherche de l'employeur " + email,
+        null,
+      );
     }
-    console.log("found employer " + email + " : " + response.data)
-    if (response.data === "") {
-      return null;
-    }
-    
+    console.log("found employer " + email + " : " + response.data);
+
     const data: EmployerData = {
       email: response.data.email,
       name: response.data.name,
       surname: response.data.surname,
-      enterprise_name: response.data.enterprise_name
+      enterprise_id: 0,
     };
-    
-    return data;
- }
-    
-    catch(error){
-      console.error('Erreur lors de la vérification de l\'employeur :', error);
-      console.error(error);
-      return(null)
-    };
-  }
 
-  export const createJob = async (employerEmail: string, jobData: jobData) => {
-    console.log("creating job " + jobData.name + " of " + employerEmail + " : " + jobData)
-    try {
-      const response = await axios.post(`${apiUrl}/employers/${employerEmail}`, jobData
+    return data;
+  } catch (error) {
+    return errorMessage(
+      "Erreur lors de la recherche de l'employeur " + email,
+      error,
+    );
+  }
+};
+
+export const getEmployerJobs = async (
+  employerEmail: string,
+): Promise<jobDataId[] | null> => {
+  console.log("searching for jobs of " + employerEmail);
+  try {
+    const response = await axios.get(
+      `${apiUrl}/employers/jobs/${employerEmail}`,
+    );
+    if (
+      response.data === null ||
+      response.data === undefined ||
+      response.status !== 200
+    ) {
+      return errorMessage(
+        "Erreur lors de la recherche des emplois de l'employeur " +
+          employerEmail,
+        null,
       );
-      console.log('Response:', response.data);
-    } catch (error) {
-      console.error('Erreur lors de la création de l\'emploi', error);
-      throw error;
     }
-  };
-  
-  export const getEmployerJobs = async (employerEmail:string):Promise<jobDataId[]> => {
-    console.log("searching for jobs of " + employerEmail)
-    try {
-      const response = await axios.get(`${apiUrl}/employers/jobs/${employerEmail}`);
-      console.log("found jobs of " + employerEmail + " : " + response.data)
-      return response.data;
-    } catch (error) {
-      console.error('Erreur lors de la récupération de tous les emplois de l\'employeur', error);
-      throw error;
+    console.log("found jobs of " + employerEmail + " : ");
+    console.log(response.data)
+    return response.data;
+  } catch (error) {
+    return errorMessage(
+      "Erreur lors de la recherche des emplois de l'employeur " + employerEmail,
+      error,
+    );
+  }
+};
+
+export const getEmployerJobsWithImage = async (
+  employerEmail: string,
+): Promise<jobDataId[] | null> => {
+  console.log("searching for jobs of " + employerEmail);
+  try {
+    const response = await axios.get(
+      `${apiUrl}/employers/jobs/images/${employerEmail}`,
+    );
+    if (
+      response.data === null ||
+      response.data === undefined ||
+      response.status !== 200
+    ) {
+      return errorMessage(
+        "Erreur lors de la recherche des emplois de l'employeur " +
+          employerEmail,
+        null,
+      );
     }
-  };
-  
-  export const deleteJob = async (employerEmail:string, jobId:string) => {
-    console.log("deleting job " + jobId + " of " + employerEmail)
-    try {
-      const response = await axios.delete(`${apiUrl}/employers/${employerEmail}/${jobId}`);
-      console.log("deleted job " + jobId + " of " + employerEmail + " : " + response.data)
-      return response.data;
-    } catch (error) {
-      console.error('Erreur lors de la suppression de l\'emploi', error);
-      throw error;
-    }
-  };
+    console.log("found jobs of " + employerEmail + " : ");
+    console.log(response.data)
+    return response.data;
+  } catch (error) {
+    return errorMessage(
+      "Erreur lors de la recherche des emplois de l'employeur " + employerEmail,
+      error,
+    );
+  }
+};
+

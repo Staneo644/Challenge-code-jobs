@@ -2,8 +2,8 @@
 import { Controller, Get, Delete, Param, Options, Res, Post, UsePipes, ValidationPipe, Body, Put } from '@nestjs/common';
 import { Response } from 'express';
 import { UsersDomain } from './users.domain';
-import { Employer } from 'src/core/employers/employer.entity';
-import { JobSeeker } from 'src/core/job-seekers/job-seeker.entity';
+import { Employer, createEmployer } from 'src/applications/employers/employer.entity';
+import { JobSeeker } from 'src/applications/job-seekers/job-seeker.entity';
 
 
 @Controller('users')
@@ -13,7 +13,7 @@ export class UsersController {
 
     @Post()
     @UsePipes(ValidationPipe)
-    createUser(@Body() employerJSON: Employer | JobSeeker) {
+    createUser(@Body() employerJSON: createEmployer | JobSeeker) {
         console.log('POST request received for user: ', employerJSON);
         return this.usersService.createUser(employerJSON);
     }
@@ -24,7 +24,7 @@ export class UsersController {
       return this.usersService.getUsers();
     }
   
-    @Post(':email')
+    @Delete(':email')
     deleteUser(@Param('email') email: string) {
       console.log(`DELETE request received for user: ${email}`);
       return this.usersService.deleteUser(email);

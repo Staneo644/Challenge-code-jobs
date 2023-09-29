@@ -1,43 +1,39 @@
 import { Injectable } from '@nestjs/common';
-import { Enterprise, enterpriseModel } from '../../core/enterprises/enterprise.entity';
+import { InjectRepository } from '@nestjs/typeorm';
+import { DeleteResult, Repository, UpdateResult } from 'typeorm';
+import { Enterprise } from './enterprise.entity';
 import { NotFoundException } from '@nestjs/common';
 
 @Injectable()
 export class EnterprisesService {
-  
+  constructor(
+    @InjectRepository(Enterprise)
+    private readonly enterpriseRepository: Repository<Enterprise>,
+  ) {}
 
   async createEnterprise(enterpriseData: Partial<Enterprise>): Promise<Enterprise> {
-    const createdEnterprise = new enterpriseModel(enterpriseData);
-    return createdEnterprise.save();
+    const createdEnterprise = this.enterpriseRepository.create(enterpriseData);
+    return await this.enterpriseRepository.save(createdEnterprise);
   }
 
   async getEnterprises(): Promise<Enterprise[]> {
-    return enterpriseModel.find().exec();
+    return await this.enterpriseRepository.find(
+      {relations: ['employers']}
+    );
   }
 
-  async updateEnterprise(title: string, updateData: Partial<Enterprise>): Promise<Enterprise> {
-    return enterpriseModel.findOneAndUpdate({ title }, updateData, { new: true }).exec();
+  async getEnterpriseById(id: number): Promise<Enterprise> {
+    return await this.enterpriseRepository.findOne({
+      where: {id},
+      relations: ['employers'],
+    });
   }
 
-  async getEnterpriseByTitle(title: string): Promise<Enterprise> {
-    return await enterpriseModel.findOne({ title }).exec();
-    
+  async updateEnterprise(id: number, updateData: Partial<Enterprise>): Promise<boolean> {
+    return (await this.enterpriseRepository.update({ id }, updateData)).affected > 0;
   }
 
-  async getEnterpriseTitle(email: string): Promise<string | null> {
-    const employer = await enterpriseModel.findOne({ email }).exec();
-    if (employer) {
-      return employer.title; 
-    } else {
-      return null;
-    }
-  }
-
-  async deleteEnterprise(title: string): Promise<Enterprise> {
-    return await enterpriseModel.findOneAndDelete({ title });
-  }
-
-  async getEnterprisesByEmail(email_patron: string): Promise<Enterprise[]> {
-    return await enterpriseModel.find({ email_patron }).exec();
+  async deleteEnterprise(id: number): Promise<boolean> {
+    return (await this.enterpriseRepository.delete(id)).affected > 0;
   }
 }

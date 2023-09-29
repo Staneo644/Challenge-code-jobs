@@ -81,11 +81,12 @@ create: build
 database :
 	docker-compose up -d db
 
-backend:database
-	cd ./project/back/app && nohup npm run start > /dev/null 2>&1 &
+adminer:database
+	docker-compose up -d adminer
 
-frontend:backend
-	cd project/front/app && npm run dev
+backend:adminer
+	docker-compose up backend
+
 
 start: build
 	# printf "%-62b%b" "$(BOLD)$(GREEN)Starting$(END) containers"

@@ -1,70 +1,57 @@
 import { Injectable } from '@nestjs/common';
-import { Enterprise } from '../../core/enterprises/enterprise.entity';
+import { Enterprise } from './enterprise.entity';
 import { NotFoundException } from '@nestjs/common';
 import { EnterprisesService } from './enterprises.service';
-import { IEnterprisesDomain } from 'src/core/enterprises/enterprise.interfaces';
+import { IEnterprisesDomain } from 'src/interfaces/enterprises/enterprise.interfaces';
 
 @Injectable()
 export class EnterprisesDomain implements IEnterprisesDomain {
   constructor(private readonly enterpriseService: EnterprisesService) {}
 
-  async createEnterprise(enterpriseData: Enterprise): Promise<Enterprise | null> {
-    const res = await this.isEnterprise(enterpriseData.title);
-    if (res) {
-        return(null)
+  async createEnterprise(enterpriseData: Partial<Enterprise>): Promise<number> {
+    try {
+      const ret = await this.enterpriseService.createEnterprise(enterpriseData);
+      if (ret === null || ret === undefined) {
+        return 0;
+      }      
+      return ret.id;
+    } catch (error) {
+      return 0;
     }
-    return this.enterpriseService.createEnterprise(enterpriseData);
   }
 
   async getEnterprises(): Promise<Enterprise[]> {
     return this.enterpriseService.getEnterprises();
   }
 
-  async updateEnterprise(title: string, updateData: Partial<Enterprise>): Promise<Enterprise> {
-    const res = await this.isEnterprise(title);
-    if (!res) {
-        throw new NotFoundException(`Entreprise avec le nom ${title} introuvable`);
+  async getEnterpriseById(id: number): Promise<Enterprise | null> {
+    try {
+      const enterprise = await this.enterpriseService.getEnterpriseById(id);
+      return enterprise;
+    } catch (error) {
+      return null;
     }
-    return this.enterpriseService.updateEnterprise(title, updateData);
   }
 
-  async getEnterpriseByTitle(title: string): Promise<Enterprise> {
-    return this.enterpriseService.getEnterpriseByTitle(title);
-  }
-
-  async getEnterprisesByEmail(email: string): Promise<Enterprise[]> {
-    return this.enterpriseService.getEnterprisesByEmail(email);
-  }
-
-  async updateEnterpriseByEmail(email: string, newEmail:string): Promise<boolean> {
-    const res = await this.getEnterprisesByEmail(email);
-    if (!res) {
+  async updateEnterprise(id: number, updateData: Partial<Enterprise>): Promise<boolean> {
+    try {
+      const result = await this.enterpriseService.updateEnterprise(id, updateData);
+      return result;
+    } catch (error) {
       return false;
     }
-    for (const enterprise of res) {
-      this.updateEnterprise(enterprise.title,{title:enterprise.title,  email_patron: newEmail});
-    }
-    return true;
   }
 
-  async isEnterprise(title: string): Promise<boolean> {
-    const enterprise = await this.getEnterpriseByTitle(title);
-    if (!enterprise) {
+  async deleteEnterprise(id: number): Promise<boolean> {
+    try {
+      const enterprise = await this.enterpriseService.getEnterpriseById(id);
+      if (enterprise === null) {
         return false;
       }
-      return true;
-}
-
-  async deleteEnterpriseTitle(title: string): Promise<void> {
-  
-    this.enterpriseService.deleteEnterprise(title);
-    
-  }
-
-  async deleteEnterprise(email: string): Promise<void> {
-    const listEnterprises = await this.enterpriseService.getEnterprisesByEmail(email);
-    for (const enterprise of listEnterprises) {
-      this.deleteEnterpriseTitle(enterprise.title);
+      const result = await this.enterpriseService.deleteEnterprise(id);
+      return result;
+    } catch (error) {
+      return false;
     }
   }
 }
