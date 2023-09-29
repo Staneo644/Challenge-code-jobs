@@ -1,4 +1,3 @@
-
 import { Module } from '@nestjs/common';
 import { EmployersController } from './employers.controller';
 import { EmployersService } from './employers.service';
@@ -12,12 +11,18 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { EnterprisesModule } from '../enterprises/enterprises.module';
 import { Enterprise } from '../enterprises/enterprise.entity';
 
-
 @Module({
-  imports: [ TypeOrmModule.forFeature([Employer]),
-  EnterprisesModule, TypeOrmModule.forFeature([Enterprise])
-   ],
+  imports: [
+    TypeOrmModule.forFeature([Employer]),
+    EnterprisesModule,
+    TypeOrmModule.forFeature([Enterprise]),
+  ],
   controllers: [EmployersController],
-  providers: [EmployersService, EmployersDomain, EnterprisesService, EnterprisesDomain],
+  providers: [
+    EmployersService,
+    EmployersDomain,
+    EnterprisesService,
+    EnterprisesDomain,
+  ],
 })
 export class EmployersModule {}

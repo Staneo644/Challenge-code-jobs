@@ -7,7 +7,10 @@ import { usePathname, useSearchParams } from "next/navigation";
 import "../../../globals.css";
 import { JobListFunction } from "./card";
 import { get } from "http";
-import { getEmployerJobs, getEmployerJobsWithImage } from "@/app/communication/employer";
+import {
+  getEmployerJobs,
+  getEmployerJobsWithImage,
+} from "@/app/communication/employer";
 import { jobData, jobDataId } from "@/app/communication/global";
 import { createContext } from "react";
 

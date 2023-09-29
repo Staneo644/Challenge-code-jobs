@@ -11,26 +11,31 @@ export class EnterprisesService {
     private readonly enterpriseRepository: Repository<Enterprise>,
   ) {}
 
-  async createEnterprise(enterpriseData: Partial<Enterprise>): Promise<Enterprise> {
+  async createEnterprise(
+    enterpriseData: Partial<Enterprise>,
+  ): Promise<Enterprise> {
     const createdEnterprise = this.enterpriseRepository.create(enterpriseData);
     return await this.enterpriseRepository.save(createdEnterprise);
   }
 
   async getEnterprises(): Promise<Enterprise[]> {
-    return await this.enterpriseRepository.find(
-      {relations: ['employers']}
-    );
+    return await this.enterpriseRepository.find({ relations: ['employers'] });
   }
 
   async getEnterpriseById(id: number): Promise<Enterprise> {
     return await this.enterpriseRepository.findOne({
-      where: {id},
+      where: { id },
       relations: ['employers'],
     });
   }
 
-  async updateEnterprise(id: number, updateData: Partial<Enterprise>): Promise<boolean> {
-    return (await this.enterpriseRepository.update({ id }, updateData)).affected > 0;
+  async updateEnterprise(
+    id: number,
+    updateData: Partial<Enterprise>,
+  ): Promise<boolean> {
+    return (
+      (await this.enterpriseRepository.update({ id }, updateData)).affected > 0
+    );
   }
 
   async deleteEnterprise(id: number): Promise<boolean> {

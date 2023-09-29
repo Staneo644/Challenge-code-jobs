@@ -3,7 +3,7 @@ import { statusJob, jobDataId } from "@/app/communication/global";
 import { useState } from "react";
 import { MyContext } from "./page";
 import { createContext } from "react";
-import { updateJob, createJob } from "@/app/communication/jobs";
+import { updateJob, createJob, deleteJob } from "@/app/communication/jobs";
 import Dropzone from "react-dropzone";
 import { DropzoneOptions } from "react-dropzone";
 import { useEffect } from "react";
@@ -30,18 +30,16 @@ export function JobListFunction() {
   const jobList = useContext(MyContext).data;
   const [name, setName] = useState(valueCard?.name ?? "");
   const [money, setMoney] = useState(valueCard?.money ?? 0);
-  const [description, setDescription] = useState(
-    valueCard?.description ?? "",
-    );
+  const [description, setDescription] = useState(valueCard?.description ?? "");
   const [completeField, setCompleteField] = useState(false);
-    
-    const [imagePreview, setImagePreview] = useState(valueCard?.imageBuffer);
-    const [isLoading, setIsLoading] = useState(false);
-    
-    const closeCard = (): void => {
-      console.log("closeCard");
-      setShowCardJobs(false);
-    };
+
+  const [imagePreview, setImagePreview] = useState(valueCard?.imageBuffer);
+  const [isLoading, setIsLoading] = useState(false);
+
+  const closeCard = (): void => {
+    console.log("closeCard");
+    setShowCardJobs(false);
+  };
   const convertStatus = (dataStatus: string) => {
     console.log("dataStatus : " + dataStatus);
     if (dataStatus === "expire") jobData.status = "expire";
@@ -56,24 +54,21 @@ export function JobListFunction() {
     setMoney(0);
     setImagePreview(undefined);
     convertStatus("actif");
-  }
-
+  };
 
   useEffect(() => {
     if (valueCard === undefined) {
       remove();
       return;
     }
-  
+
     setImagePreview(valueCard.imageBuffer);
     setName(valueCard.name);
     setMoney(valueCard.money);
-    
+
     setDescription(valueCard.description);
     convertStatus(valueCard.status);
-
   }, [valueCard]);
-
 
   const handleDrop = (acceptedFiles: any) => {
     const file = acceptedFiles[0];
@@ -100,6 +95,18 @@ export function JobListFunction() {
     }
   };
 
+  const destroy = () => {
+    if (valueCard === undefined) {
+      return;
+    }
+    deleteJob(valueCard.id.toString()).then((data) => {
+      if (data === true) {
+        reload();
+        closeCard();
+      }
+    });
+  };
+
   const dropzoneOptions: DropzoneOptions = {
     accept: { "image/*": [".jpg", ".jpeg", ".png"] },
     onDrop: handleDrop,
@@ -118,7 +125,7 @@ export function JobListFunction() {
         description: description,
         interested_jobseekers: [],
         money: money,
-        
+
         imageBuffer: imagePreview,
         status: jobData.status,
       }).then((data) => {
@@ -133,7 +140,7 @@ export function JobListFunction() {
         description: description,
         money: money,
         interested_jobseekers: valueCard.interested_jobseekers,
-    
+
         imageBuffer: imagePreview,
         status: jobData.status,
       }).then((data) => {
@@ -325,25 +332,38 @@ export function JobListFunction() {
                   </Dropzone>
                 </div>
               </div>
-              {
-                completeField && (
-                  <div className="text-red-500 text-sm">
-                    Veuillez remplir tous les champs
-                  </div>
-                )
-              }
+              {completeField && (
+                <div className="text-red-500 text-sm">
+                  Veuillez remplir tous les champs
+                </div>
+              )}
+
               <div className="mt-6 flex justify-end space-x-4">
+                {valueCard !== undefined && (
+                  <button
+                    className="bg-red-500 text-white px-4 py-2 rounded-md hover:bg-red-600"
+                    onClick={() => {
+                      destroy();
+                    }}
+                  >
+                    Détruire
+                  </button>
+                )}
+
                 <button
-                  className="bg-red-500 text-white px-4 py-2 rounded-md hover:bg-red-600"
+                  className="bg-gray-500 text-white px-4 py-2 rounded-md hover:bg-gray-600"
                   onClick={() => {
                     closeCard();
                   }}
                 >
                   Annuler
                 </button>
+
                 <button
                   className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600"
-                  onClick={() => {loadButton();}}
+                  onClick={() => {
+                    loadButton();
+                  }}
                 >
                   Enregistrer
                 </button>

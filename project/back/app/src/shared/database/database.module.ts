@@ -18,5 +18,4 @@ dotenv.config();
     }),
   ],
 })
-
 export class DatabaseModule {}

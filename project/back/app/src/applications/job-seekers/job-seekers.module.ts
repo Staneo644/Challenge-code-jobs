@@ -18,10 +18,25 @@ import { EnterprisesService } from '../enterprises/enterprises.service';
 import { Enterprise } from '../enterprises/enterprise.entity';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([JobSeeker]), TypeOrmModule.forFeature([Job]), JobsModule, EmployersModule, TypeOrmModule.forFeature([Employer])
-  ,EnterprisesModule, TypeOrmModule.forFeature([Enterprise])
-],
+  imports: [
+    TypeOrmModule.forFeature([JobSeeker]),
+    TypeOrmModule.forFeature([Job]),
+    JobsModule,
+    EmployersModule,
+    TypeOrmModule.forFeature([Employer]),
+    EnterprisesModule,
+    TypeOrmModule.forFeature([Enterprise]),
+  ],
   controllers: [JobSeekersController],
-  providers: [JobSeekersService, JobSeekersDomain, JobsDomain, JobsService, EmployersDomain, EmployersService, EnterprisesDomain, EnterprisesService]
+  providers: [
+    JobSeekersService,
+    JobSeekersDomain,
+    JobsDomain,
+    JobsService,
+    EmployersDomain,
+    EmployersService,
+    EnterprisesDomain,
+    EnterprisesService,
+  ],
 })
 export class JobSeekersModule {}

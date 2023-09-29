@@ -22,24 +22,24 @@ export class JobsService {
     job.money = jobData.money;
     job.status = jobData.status;
     job.imageBuffer = jobData.imageBuffer;
-    this.jobRepository.save(job)
+    this.jobRepository.save(job);
     return true;
   }
 
-  async deleteJob(id: number): Promise<DeleteResult> {
-    return await this.jobRepository.delete(id);
+  async deleteJob(id: number): Promise<boolean> {
+    return (await this.jobRepository.delete(id)).affected > 0;
   }
 
   async getJobById(id: number): Promise<Job> {
     return await this.jobRepository.findOne({
-      where: {id},
-      relations: ['interested_jobseekers', 'employer']
+      where: { id },
+      relations: ['interested_jobseekers', 'employer'],
     });
   }
 
   async getJobs(): Promise<Job[]> {
-    return await this.jobRepository.find(
-      {relations: ['interested_jobseekers', 'employer']}
-    );
+    return await this.jobRepository.find({
+      relations: ['interested_jobseekers', 'employer'],
+    });
   }
 }

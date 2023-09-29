@@ -46,7 +46,7 @@ export interface jobData extends statusJob {
   description: string;
   name: string;
   imageBuffer: string;
-  interested_jobseekers : jobSeekerData[];
+  interested_jobseekers: jobSeekerData[];
 }
 
 export interface jobDataId extends jobData {
@@ -59,8 +59,8 @@ export function errorMessage(message: string, error: any): null {
   if (error !== null && error !== undefined) {
     console.log(message, error);
   }
-  const router = useRouter()
-  router.push("/")
+  const router = useRouter();
+  router.push("/");
   toast.error(message);
   return null;
 }

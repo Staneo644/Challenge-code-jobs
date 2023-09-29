@@ -14,10 +14,23 @@ import { EnterprisesDomain } from '../enterprises/enterprises.domain';
 import { EnterprisesService } from '../enterprises/enterprises.service';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Job]), EmployersModule, TypeOrmModule.forFeature([Employer]), EnterprisesModule, TypeOrmModule.forFeature([Enterprise]), 
-  EnterprisesModule, TypeOrmModule.forFeature([Enterprise])
-],
-  providers: [JobsService, JobsDomain, EmployersDomain, EmployersService, EnterprisesDomain, EnterprisesService],
-  controllers: [JobsController]
+  imports: [
+    TypeOrmModule.forFeature([Job]),
+    EmployersModule,
+    TypeOrmModule.forFeature([Employer]),
+    EnterprisesModule,
+    TypeOrmModule.forFeature([Enterprise]),
+    EnterprisesModule,
+    TypeOrmModule.forFeature([Enterprise]),
+  ],
+  providers: [
+    JobsService,
+    JobsDomain,
+    EmployersDomain,
+    EmployersService,
+    EnterprisesDomain,
+    EnterprisesService,
+  ],
+  controllers: [JobsController],
 })
 export class JobsModule {}

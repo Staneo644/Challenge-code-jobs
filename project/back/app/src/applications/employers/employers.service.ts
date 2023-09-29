@@ -1,7 +1,7 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { DeleteResult, Repository, UpdateResult } from 'typeorm';
-import { Employer } from './employer.entity'; 
+import { Employer } from './employer.entity';
 
 @Injectable()
 export class EmployersService {
@@ -16,23 +16,28 @@ export class EmployersService {
   }
 
   async getEmployers(): Promise<Employer[]> {
-    return await this.employerRepository.find(
-      {relations: ['enterprise', 'jobs']}
-    );
+    return await this.employerRepository.find({
+      relations: ['enterprise', 'jobs'],
+    });
   }
 
   async getEmployerJobsByEmail(email: string): Promise<Employer> {
     return await this.employerRepository
-    .createQueryBuilder('employer')
-    .where('employer.email = :email', { email })
-    .leftJoinAndSelect('employer.enterprise', 'enterprise')
-    .leftJoinAndSelect('employer.jobs', 'jobs')
-    .leftJoinAndSelect('jobs.interested_jobseekers', 'interested_jobseekers')
-    .getOne();
+      .createQueryBuilder('employer')
+      .where('employer.email = :email', { email })
+      .leftJoinAndSelect('employer.enterprise', 'enterprise')
+      .leftJoinAndSelect('employer.jobs', 'jobs')
+      .leftJoinAndSelect('jobs.interested_jobseekers', 'interested_jobseekers')
+      .getOne();
   }
 
-  async updateEmployer(id: number, employerData: Partial<Employer>): Promise<boolean> {
-    return (await this.employerRepository.update(id, employerData)).affected > 0;
+  async updateEmployer(
+    id: number,
+    employerData: Partial<Employer>,
+  ): Promise<boolean> {
+    return (
+      (await this.employerRepository.update(id, employerData)).affected > 0
+    );
   }
 
   async deleteEmployer(id: number): Promise<boolean> {
@@ -40,12 +45,12 @@ export class EmployersService {
   }
 
   async getEmployerById(id: number): Promise<Employer> {
-    return await this.employerRepository.findOne({where: {id}} );
+    return await this.employerRepository.findOne({ where: { id } });
   }
 
   async getEmployerByEmail(email: string): Promise<Employer> {
     return await this.employerRepository.findOne({
-      where: {email},
+      where: { email },
       relations: ['enterprise'],
     });
   }

@@ -38,8 +38,8 @@ const showOneCandidate = (job: jobDataId) => {
   useEffect(() => {
     for (let i = 0; i < job.interested_jobseekers.length; i++) {
       //getJobSeeker(job.interested_jobseekers[i]).then((data) => {
-        //if (data) 
-        //  updateJobSeeker(i, data);
+      //if (data)
+      //  updateJobSeeker(i, data);
       //});
     }
   }, []);
@@ -131,7 +131,12 @@ export default function Home() {
                       {job.name}, posté le {date(job.date)}
                     </div>
                     <span className=" flex ml-4">
-                      {job ? job.interested_jobseekers ? job.interested_jobseekers.length : 0 : 0} {" candidat     ."}
+                      {job
+                        ? job.interested_jobseekers
+                          ? job.interested_jobseekers.length
+                          : 0
+                        : 0}{" "}
+                      {" candidat     ."}
                       <FontAwesomeIcon
                         icon={showCandidates[number] ? faAngleUp : faAngleDown}
                       />
@@ -139,21 +144,23 @@ export default function Home() {
                   </div>
                   {showCandidates[number] && (
                     <div className="flex flex-col">
-                      {job.interested_jobseekers ? job.interested_jobseekers.map((candidate, index) => (
-                        <div
-                          key={index}
-                          className="flex flex-row items-center bg-white shadow-md p-4 m-4 rounded-lg text-black hover:bg-gray-100 justify-between"
-                        >
-                          <div className="flex">
-                            {candidate.name}
-                            {"   "}
-                            {candidate.surname}
+                      {job.interested_jobseekers ? (
+                        job.interested_jobseekers.map((candidate, index) => (
+                          <div
+                            key={index}
+                            className="flex flex-row items-center bg-white shadow-md p-4 m-4 rounded-lg text-black hover:bg-gray-100 justify-between"
+                          >
+                            <div className="flex">
+                              {candidate.name}
+                              {"   "}
+                              {candidate.surname}
+                            </div>
+                            <div className="flex">{candidate.email}</div>
                           </div>
-                          <div className="flex">
-                            {candidate.email}
-                          </div>
-                        </div>
-                      )) : <></>}
+                        ))
+                      ) : (
+                        <></>
+                      )}
                     </div>
                   )}
                 </div>

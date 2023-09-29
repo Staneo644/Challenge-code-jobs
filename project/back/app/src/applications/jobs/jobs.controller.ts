@@ -5,35 +5,35 @@ import { Job } from './job.entity';
 
 @Controller('jobs')
 export class JobsController {
-    constructor(private readonly jobsService: JobsDomain) {}
+  constructor(private readonly jobsDomain: JobsDomain) {}
 
-    @Get()
-    getJobs() {
-      console.log('GET request received for all jobs')
-      return this.jobsService.getJobs();
-    }
-
-    @Get(':jobId')
-    async getJobById( @Param('jobId') jobId: string, @Res() res) {
-      console.log('GET request received for job ', jobId)
-      return await this.jobsService.getJobById(Number(jobId))
-    }
-
-    @Delete(':jobId')
-    deleteJob(@Param('jobId') jobId: string) {
-    console.log('DELETE request received for job ', jobId)
-    return this.jobsService.deleteJob(Number(jobId));
+  @Get()
+  getJobs() {
+    console.log('GET request received for all jobs');
+    return this.jobsDomain.getJobs();
   }
 
-    @Post(':email')
-    createJob( @Param ('email') email:string, @Body() jobData: Job) {
-      console.log('POST request received for job ', jobData);
-      return this.jobsService.createJob(jobData, email);
-    }
-  
-    @Put(':jobId')
-    updateJob( @Param('jobId') jobId: string, @Body() jobData: Job) {
-      console.log('PUT request received for job ', jobId)
-      return this.jobsService.updateJob(Number(jobId), jobData);
-    }
+  @Get(':jobId')
+  async getJobById(@Param('jobId') jobId: string, @Res() res) {
+    console.log('GET request received for job ', jobId);
+    return await this.jobsDomain.getJobById(Number(jobId));
+  }
+
+  @Delete(':jobId')
+  deleteJob(@Param('jobId') jobId: string) {
+    console.log('DELETE request received for job ', jobId);
+    return this.jobsDomain.deleteJob(Number(jobId));
+  }
+
+  @Post(':email')
+  createJob(@Param('email') email: string, @Body() jobData: Job) {
+    console.log('POST request received for job ', jobData);
+    return this.jobsDomain.createJob(jobData, email);
+  }
+
+  @Put(':jobId')
+  updateJob(@Param('jobId') jobId: string, @Body() jobData: Job) {
+    console.log('PUT request received for job ', jobId);
+    return this.jobsDomain.updateJob(Number(jobId), jobData);
+  }
 }

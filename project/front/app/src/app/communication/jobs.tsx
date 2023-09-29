@@ -114,38 +114,25 @@ export const addInterestedUser = async (
   }
 };
 
-export const deleteJob = async (
-  employerEmail: string,
-  jobId: string,
-): Promise<boolean | null> => {
-  console.log("deleting job " + jobId + " of " + employerEmail);
+export const deleteJob = async (jobId: string): Promise<boolean | null> => {
+  console.log("deleting job " + jobId);
   try {
-    const response = await axios.delete(
-      `${apiUrl}/jobs/${jobId}`,
-    );
+    const response = await axios.delete(`${apiUrl}/jobs/${jobId}`);
     if (
       response.data === null ||
       response.data === undefined ||
       response.status !== 200
     ) {
       return errorMessage(
-        "Erreur lors de la suppression de l'emploi " +
-          jobId +
-          " de " +
-          employerEmail,
+        "Erreur lors de la suppression de l'emploi " + jobId,
         null,
       );
     }
-    console.log(
-      "deleted job " + jobId + " of " + employerEmail + " : " + response.data,
-    );
+    console.log("deleted job " + jobId + " : " + response.data);
     return response.data;
   } catch (error) {
     return errorMessage(
-      "Erreur lors de la suppression de l'emploi " +
-        jobId +
-        " de " +
-        employerEmail,
+      "Erreur lors de la suppression de l'emploi " + jobId,
       error,
     );
   }

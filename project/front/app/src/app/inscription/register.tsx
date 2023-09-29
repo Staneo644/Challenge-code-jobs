@@ -45,7 +45,7 @@ export default function Register() {
       return;
     }
     userExist(email).then((dataExist) => {
-      if ( dataExist === true) {
+      if (dataExist === true) {
         setErrorEmail(true);
         setErrorFormatEmail(false);
         return;
@@ -64,7 +64,10 @@ export default function Register() {
                 surname: surname,
                 enterprise_id: data,
               }).then((dataEmployer) => {
-                if (dataEmployer !== null && dataEmployer === userEnum.isEmployer) {
+                if (
+                  dataEmployer !== null &&
+                  dataEmployer === userEnum.isEmployer
+                ) {
                   router.push("/accueil/recruteur?email=" + email);
                 }
               });

@@ -69,7 +69,7 @@ export const addSeeingJob = async (
   try {
     const response = await axios.post(
       `${apiUrl}/jobseekers/${email}/${jobData}`,
-      {validate:valid},
+      { validate: valid },
     );
 
     if (

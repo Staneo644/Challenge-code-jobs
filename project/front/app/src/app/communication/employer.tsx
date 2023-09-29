@@ -63,7 +63,7 @@ export const getEmployerJobs = async (
       );
     }
     console.log("found jobs of " + employerEmail + " : ");
-    console.log(response.data)
+    console.log(response.data);
     return response.data;
   } catch (error) {
     return errorMessage(
@@ -93,7 +93,7 @@ export const getEmployerJobsWithImage = async (
       );
     }
     console.log("found jobs of " + employerEmail + " : ");
-    console.log(response.data)
+    console.log(response.data);
     return response.data;
   } catch (error) {
     return errorMessage(
@@ -102,4 +102,3 @@ export const getEmployerJobsWithImage = async (
     );
   }
 };
-

@@ -27,7 +27,10 @@ export class JobSeekersService {
     return await this.jobSeekerRepository.findOne({ where: { id } });
   }
 
-  async updateJobSeeker(id:number, jobSeekerData: Partial<JobSeeker>): Promise<UpdateResult> {
+  async updateJobSeeker(
+    id: number,
+    jobSeekerData: Partial<JobSeeker>,
+  ): Promise<UpdateResult> {
     return await this.jobSeekerRepository.update(id, jobSeekerData);
   }
 

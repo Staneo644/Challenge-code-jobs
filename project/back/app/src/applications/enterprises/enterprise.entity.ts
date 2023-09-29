@@ -5,10 +5,10 @@ import { Employer } from '../employers/employer.entity';
 export class Enterprise {
   @PrimaryGeneratedColumn()
   id: number;
-  
+
   @Column()
   title: string;
 
-  @OneToMany(() => Employer, employer => employer.enterprise)
+  @OneToMany(() => Employer, (employer) => employer.enterprise)
   employers: Employer[];
 }

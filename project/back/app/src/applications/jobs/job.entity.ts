@@ -1,4 +1,13 @@
-import { Entity, Column, PrimaryGeneratedColumn, ManyToOne,JoinTable, BaseEntity, ManyToMany, OneToMany,  } from 'typeorm';
+import {
+  Entity,
+  Column,
+  PrimaryGeneratedColumn,
+  ManyToOne,
+  JoinTable,
+  BaseEntity,
+  ManyToMany,
+  OneToMany,
+} from 'typeorm';
 import { Employer } from '../employers/employer.entity';
 import { JobSeeker } from '../job-seekers/job-seeker.entity';
 
@@ -40,14 +49,15 @@ export class Job extends BaseEntity {
   @Column({ name: 'image_buffer' })
   imageBuffer: string;
 
-  @Column({nullable: true})
+  @Column({ nullable: true })
   date: Date;
 
-  @ManyToOne(() => Employer, employer => employer.jobs)
+  @ManyToOne(() => Employer, (employer) => employer.jobs)
   employer: Employer;
 
-  @ManyToMany(() => JobSeeker, jobSeeker => jobSeeker.jobInterested, { nullable: true })
+  @ManyToMany(() => JobSeeker, (jobSeeker) => jobSeeker.jobInterested, {
+    nullable: true,
+  })
   @JoinTable()
   interested_jobseekers: JobSeeker[];
-
 }

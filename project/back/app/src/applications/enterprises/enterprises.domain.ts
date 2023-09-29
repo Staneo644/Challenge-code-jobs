@@ -13,7 +13,7 @@ export class EnterprisesDomain implements IEnterprisesDomain {
       const ret = await this.enterpriseService.createEnterprise(enterpriseData);
       if (ret === null || ret === undefined) {
         return 0;
-      }      
+      }
       return ret.id;
     } catch (error) {
       return 0;
@@ -33,9 +33,15 @@ export class EnterprisesDomain implements IEnterprisesDomain {
     }
   }
 
-  async updateEnterprise(id: number, updateData: Partial<Enterprise>): Promise<boolean> {
+  async updateEnterprise(
+    id: number,
+    updateData: Partial<Enterprise>,
+  ): Promise<boolean> {
     try {
-      const result = await this.enterpriseService.updateEnterprise(id, updateData);
+      const result = await this.enterpriseService.updateEnterprise(
+        id,
+        updateData,
+      );
       return result;
     } catch (error) {
       return false;

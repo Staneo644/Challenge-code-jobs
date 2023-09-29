@@ -39,7 +39,7 @@ export default function Home() {
   const [noJobs, setNoJobs] = useState(true);
   const [actualDate, setActualDate] = useState(new Date());
 
-  const showNextJob = async (valid:boolean) => {
+  const showNextJob = async (valid: boolean) => {
     if (jobs === undefined) {
       return;
     }
@@ -73,10 +73,9 @@ export default function Home() {
   useEffect(() => {
     setEmail(searchParams.get("email") ?? "null");
     getJobs(searchParams.get("email") ?? "null").then((data) => {
-      if (data === null)
-        return
+      if (data === null) return;
       console.log(data);
-      
+
       setJobs(data);
       if (data.length > 0) {
         setActualDate(new Date(data[currentJobIndex].date));
