@@ -3,12 +3,11 @@ import { Employer, createEmployer, jobSendEmployer } from './employer.entity';
 import { EmployersService } from './employers.service';
 import { EnterprisesDomain } from '../enterprises/enterprises.domain';
 import { EnterprisesService } from '../enterprises/enterprises.service';
-import { IEmployersDomain } from '../../interfaces/employers/employer.interfaces';
 import { Job } from '../jobs/job.entity';
 import { JobsDomain } from '../jobs/jobs.domain';
 
 @Injectable()
-export class EmployersDomain implements IEmployersDomain {
+export class EmployersDomain  {
   constructor(
     private readonly employerService: EmployersService,
     private readonly enterprisesDomain: EnterprisesDomain,

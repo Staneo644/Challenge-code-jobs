@@ -2,10 +2,9 @@ import { Injectable } from '@nestjs/common';
 import { Enterprise } from './enterprise.entity';
 import { NotFoundException } from '@nestjs/common';
 import { EnterprisesService } from './enterprises.service';
-import { IEnterprisesDomain } from 'src/interfaces/enterprises/enterprise.interfaces';
 
 @Injectable()
-export class EnterprisesDomain implements IEnterprisesDomain {
+export class EnterprisesDomain {
   constructor(private readonly enterpriseService: EnterprisesService) {}
 
   async createEnterprise(enterpriseData: Partial<Enterprise>): Promise<number> {

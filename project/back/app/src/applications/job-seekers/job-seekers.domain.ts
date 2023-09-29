@@ -2,11 +2,10 @@ import { Injectable } from '@nestjs/common';
 import { JobSeeker } from './job-seeker.entity';
 import { JobSeekersService } from './job-seekers.service';
 import { JobsDomain } from '../jobs/jobs.domain';
-import { IJobSeekersDomain } from '../../interfaces/job-seekers/job-seeker.interfaces';
 import { Job } from '../jobs/job.entity';
 
 @Injectable()
-export class JobSeekersDomain implements IJobSeekersDomain {
+export class JobSeekersDomain  {
   constructor(
     private readonly jobSeekerService: JobSeekersService,
     private readonly jobDomain: JobsDomain,
